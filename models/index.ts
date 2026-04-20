@@ -1,0 +1,1 @@
+export type ENV = 'qa' | 'prod' | 'staging' | 'dev';
