@@ -7,6 +7,15 @@ export class CommonLocators {
         this.locatorInitialization();
     }
 
+    setPage(page: Page) {
+        this.page = page;
+        this.locatorInitialization();
+    }
+
+    getPage() {
+        return this.page;
+    }
+
     btnSave!: Locator;
     btnCancel!: Locator;
     btnEdit!: Locator;
