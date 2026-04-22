@@ -1,6 +1,6 @@
 export class Constants {
   static readonly ENV = process.env.ENV || 'qa';
-  static readonly BASE_URL = process.env.BASE_URL || 'https://the-internet.herokuapp.com';
+  static readonly BASE_URL = process.env.BASE_URL || 'https://ecommerce-playground.lambdatest.io/';
   static readonly LOGIN_URL = `${Constants.BASE_URL}/login`;
   static readonly SECURE_URL = `${Constants.BASE_URL}/secure`;
   static readonly SUCCESS_MESSAGE = 'You logged into a secure area!';

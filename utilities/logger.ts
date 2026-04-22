@@ -13,6 +13,7 @@ export class Logger {
     static readonly SHOW_LOG: boolean = (process.env.SHOW_LOG ?? 'true').toLowerCase() === 'true';
 
     /** Logs general information (default console.log). */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static log(...args: any[]): void {
         if (Logger.SHOW_LOG) {
             console.log(...args);
@@ -20,6 +21,7 @@ export class Logger {
     }
 
     /** Logs informational messages (console.info). */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static info(...args: any[]): void {
         if (Logger.SHOW_LOG) {
             console.info(...args);
@@ -27,6 +29,7 @@ export class Logger {
     }
 
     /** Logs debug messages (console.debug). */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static debug(...args: any[]): void {
         if (Logger.SHOW_LOG) {
             console.debug(...args);
@@ -34,6 +37,7 @@ export class Logger {
     }
 
     /** Logs warnings (console.warn). */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static warn(...args: any[]): void {
         if (Logger.SHOW_LOG) {
             console.warn(...args);
@@ -41,11 +45,13 @@ export class Logger {
     }
 
     /** Logs errors (always printed, not gated by SHOW_LOG). */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static error(...args: any[]): void {
         console.error(...args);
     }
 
     /** Prints a stack trace (console.trace). */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static trace(...args: any[]): void {
         if (Logger.SHOW_LOG) {
             console.trace(...args);
@@ -57,9 +63,12 @@ export class Logger {
      * @param tabularData Array or object to display
      * @param properties Optional list of columns to include
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     static logData(_title: string, _data: any): void {}
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     static logResult(_icon: string, _message: string, _data?: any): void {}
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static table(tabularData: any, properties?: string[]): void {
         if (Logger.SHOW_LOG) {
             console.table(tabularData, properties);
@@ -67,6 +76,7 @@ export class Logger {
     }
 
     /** Starts a new inline group (console.group). */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static group(...label: any[]): void {
         if (Logger.SHOW_LOG) {
             console.group(...label);
