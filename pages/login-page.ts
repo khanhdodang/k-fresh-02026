@@ -18,15 +18,17 @@ export class LoginPage extends LoginLocators {
    *  Logs in using the provided user credentials.
    * @param user An object containing the username and password for login.
    */
-  @step('Log in with user credentials')
-  async login(user: User): Promise<void> {
-    await test.step(`Log in with username: ${user.username}`, async () => {
-      await this.inputUsername.fill(user.username);
-      await this.inputPassword.fill(user.password);
-      await this.btnSubmit.click();
-    });
-  }
-  
+@step('Log in with user credentials')
+async login(user: User): Promise<void> {
+
+  await this.page.waitForURL(/login/);
+
+  await this.inputEmail.waitFor({ state: 'visible' });
+
+  await this.inputEmail.fill(user.email);
+  await this.inputPassword.fill(user.password);
+  await this.btnSubmit.click();
+}
   /**
    * Asserts that the login was successful by checking the URL and the presence of a success message.
    */

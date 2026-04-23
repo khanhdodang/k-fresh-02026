@@ -1,18 +1,18 @@
 {
-    "qa": {
-        "username": "tomsmith",
-        "password": "SuperSecretPassword!"
-    },
-    "prod": {
-        "username": "prod_user",
-        "password": "ProdSecretPassword!"
-    },
-    "staging": {
-        "username": "staging_user",
-        "password": "StagingSecretPassword!"
-    },
-    "dev": {
-        "username": "dev_user",
-        "password": "DevSecretPassword!"
-    }
+  "qa": {
+    "email": "thanhho@gmail.com",
+    "password": "xX5KhJr!bvt6cCG"
+  },
+  "prod": {
+    "email": "prod_user@gmail.com",
+    "password": "ProdSecretPassword!"
+  },
+  "staging": {
+    "email": "staging_user@gmail.com",
+    "password": "StagingSecretPassword!"
+  },
+  "dev": {
+    "email": "dev_user@gmail.com",
+    "password": "DevSecretPassword!"
+  }
 }

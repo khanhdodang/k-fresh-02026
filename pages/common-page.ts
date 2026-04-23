@@ -3,7 +3,7 @@ import { CommonLocators } from '../locators/common-locators';
 import { step } from '../utilities/logging';
 
 export class CommonPage extends CommonLocators {
-    
+
     constructor(page: Page) {
         super(page);
     }

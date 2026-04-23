@@ -1,5 +1,4 @@
-import test, { expect, Page } from '@playwright/test';
-import { Constants } from '../utilities/constants';
+import { Page } from '@playwright/test';
 import { CommonPage } from './common-page';
 import { step } from '../utilities/logging';
 import { HomeLocators } from '../locators/home-locators';
@@ -13,14 +12,18 @@ export class HomePage extends HomeLocators {
     this.commonPage = new CommonPage(page);
   }
 
-  /**
-   * Selects a menu item from the main navigation.
-   * @param menuName The name of the menu item to select.
-   */
-  @step('Select Menu')
-  async selectMenu(menuName: string): Promise<void> {
+  @step('Click Wishlist Icon')
+  async clickWishListIcon(): Promise<void> {
+    await this.wishListIcon.click();
   }
 
-  
-
+  /**
+   * Hover vào product card thứ 2, click "Add to Wish List"
+   * Trả về tên sản phẩm để dùng cho assertion ở các bước sau
+   */
+  @step("Add first product to Wishlist")
+  async addFirstProductToWishlist(): Promise<void> {
+    await this.productCards.first().hover();
+    await this.getAddToWishlistButton(0).click();
+  }
 }
