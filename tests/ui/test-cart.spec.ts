@@ -72,5 +72,4 @@ test.describe('Cart Tests', () => {
     await cartPage.updateProductQuantity(productWithZeroQty);
     await cartPage.verifyProductRemovedFromCart(product);
   });
-
 });

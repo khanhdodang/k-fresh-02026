@@ -1,17 +1,21 @@
-import { expect, Page } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { CommonPage } from './common-page';
 import { step } from '../utilities/logging';
 import { CartLocators } from '../locators/cart-locators';
 import { Product } from '../models/product';
-import { formatCurrency } from '../utilities/currency';
+import { Currency } from '../utilities/currency';
+import { AssertHelper } from '../tests/ui/assert-helper-page';
+import { Assertions } from '../utilities/assertions';
 
 export class CartPage extends CartLocators {
 
   commonPage: CommonPage;
+  assertHelper: AssertHelper;
 
   constructor(page: Page) {
     super(page);
     this.commonPage = new CommonPage(page);
+    this.assertHelper = new AssertHelper();
   }
 
   /**
@@ -19,7 +23,7 @@ export class CartPage extends CartLocators {
    */
   @step('Click Cart Button')
   async clickCartButton(): Promise<void> {
-    await this.btnCart.click();
+    await this.commonPage.click(this.btnCart);
   }
 
   /**
@@ -27,7 +31,7 @@ export class CartPage extends CartLocators {
    */
   @step('Click Checkout Button')
   async clickCheckoutButton(): Promise<void> {
-    await this.commonPage.roleButtonName('Checkout', true).click();
+    await this.commonPage.click(this.commonPage.roleButtonName('Checkout'));
   }
 
   /**
@@ -35,7 +39,7 @@ export class CartPage extends CartLocators {
    */
   @step('Click Edit Cart Button')
   async clickEditCartButton(): Promise<void> {
-    await this.commonPage.roleButtonName('Edit cart').click();
+    await this.commonPage.click(this.commonPage.roleButtonName('Edit cart').first());
   }
 
   /**
@@ -44,7 +48,7 @@ export class CartPage extends CartLocators {
    */
   @step('Verifying that the main cart page displays the expected message when the cart is empty')
   async verifyMainCartIsEmpty(expectedMessage: string): Promise<void> {
-    await expect(this.pMainCartMessage).toContainText(expectedMessage);
+    await this.assertHelper.assertElementContainsText(this.pMainCartMessage, expectedMessage);
   }
 
   /**
@@ -58,10 +62,13 @@ export class CartPage extends CartLocators {
 
   @step('Verifying that the product is added to the cart')
   async verifyProductAddedToCart(product: Product): Promise<void> {
-    await expect(this.rowProduct(product.name)).toBeVisible();
-    await expect(this.inputQuantity(product.name)).toHaveValue(product.quantity.toString());
-    const expectedTotal = formatCurrency(product.price * product.quantity);
-    await expect(this.cellTotal(product.name)).toContainText(expectedTotal);
+    await this.assertHelper.assertElementVisible(this.rowProduct(product.name));
+    await this.assertHelper.assertElementHasValue(this.inputQuantity(product.name), product.quantity.toString());
+    
+    const totalText = await this.cellTotal(product.name).innerText();
+    const actualTotal = Currency.parseCurrency(totalText);
+    const expectedTotal = product.price * product.quantity;
+    Assertions.assertEqual(actualTotal, expectedTotal, `Expected total for ${product.name} to be ${expectedTotal}`);
   }
 
   /**
@@ -92,7 +99,7 @@ export class CartPage extends CartLocators {
    */
   @step('Verifying that a specific product has been removed from the cart by checking that it no longer appears in the cart table')
   async verifyProductRemovedFromCart(product: Product): Promise<void> {
-    await expect(this.rowProduct(product.name)).not.toBeVisible();
+    await this.assertHelper.assertElementNotVisible(this.rowProduct(product.name));
   }
 
   /**
@@ -111,7 +118,7 @@ export class CartPage extends CartLocators {
    */
   @step('Verifying that a success message is displayed after modifying the cart')
   async verifyCartModifiedSuccessMessage(expectedMessage: string): Promise<void> {
-    await expect(this.divCartModifiedSuccessMessage).toContainText(expectedMessage);
+    await this.assertHelper.assertElementContainsText(this.divCartModifiedSuccessMessage, expectedMessage);
   }
 
   /**
@@ -121,9 +128,12 @@ export class CartPage extends CartLocators {
    */
   @step('Verifying updated product quantity and its total')
   async verifyUpdatedProductQuantity(product: Product): Promise<void> {
-    const expectedTotal = formatCurrency(product.price * product.quantity);
-    await expect(this.cellTotal(product.name)).toContainText(expectedTotal);
-    await expect(this.inputQuantity(product.name)).toHaveValue(product.quantity.toString());
+    const totalText = await this.cellTotal(product.name).innerText();
+    const actualTotal = Currency.parseCurrency(totalText);
+    const expectedTotal = product.price * product.quantity;
+    Assertions.assertEqual(actualTotal, expectedTotal, `Expected updated total for ${product.name} to be ${expectedTotal}`);
+    
+    await this.assertHelper.assertElementHasValue(this.inputQuantity(product.name), product.quantity.toString());
   }
 
 }

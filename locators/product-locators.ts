@@ -1,7 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { CommonLocators } from './common-locators';
 
-
 export class ProductLocators extends CommonLocators {
 
   constructor(page: Page) {
@@ -12,7 +11,6 @@ export class ProductLocators extends CommonLocators {
   btnIncreaseQuantity!: Locator;
   inputQuantity!: Locator;
   divSuccessAlert!: Locator;
-
 
   locatorInitialization(): void {
     super.locatorInitialization();
