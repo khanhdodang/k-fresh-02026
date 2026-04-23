@@ -36,9 +36,6 @@ export class HomeLocators extends CommonLocators {
         this.btnAddToCart = this.page.locator('button[title="Add to Cart"]');
         this.menuLink = (menuName: string) =>
             this.page.locator('nav').locator(`a:has-text("${menuName}")`);
-
-        // this.btnCategory = this.page.locator('a:has-text("Shop by Category")');
-        // this.addToCart = this.page.locator('.product-thumb').locator("xpath=.//button[@title='Add to Cart']");
     }
 
     getProductCard(productName: string): Locator {

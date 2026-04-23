@@ -5,6 +5,9 @@ import { ProductLocators } from '../locators/product-locators';
 import { Product } from '../models/product';
 
 export class ProductPage extends ProductLocators {
+  clickUpdateQuantity() {
+    throw new Error('Method not implemented.');
+  }
 
   commonPage: CommonPage;
 
@@ -57,13 +60,4 @@ export class ProductPage extends ProductLocators {
   async setQuantity(qty: number): Promise<void> {
     await this.inputQuantity.fill(qty.toString());
   }
-
-  // /**
-  //  * Increases the product quantity by clicking the increase quantity button a specified number of times
-  //  * @param quantity The number of times to click the increase quantity button
-  //  */
-  // @step('Increasing the product quantity by input quantity in card page')
-  // async inputQuantity(quantity: Locator, times: number): Promise<void> {
-  //   await quantity.fill(times.toString());
-  // }
 }

@@ -5,13 +5,13 @@ export class ProductLocators extends CommonLocators {
 
   constructor(page: Page) {
     super(page);
-    this.locatorInitialization();
+    this.locatorsInitialization();
   }
-
-  btnIncreaseQuantity!: Locator;
-  inputQuantity!: Locator;
+  btnAddToCart!: Locator;
   divSuccessAlert!: Locator;
   lnkViewCart!: Locator;
+  btnIncreaseQuantity!: Locator;
+  inputQuantity!: Locator;
 
   locatorInitialization(): void {
     super.locatorInitialization();
@@ -23,5 +23,14 @@ export class ProductLocators extends CommonLocators {
     this.lnkViewCart = this.page
       .getByRole('link', { name: 'View Cart' })
       .first();
+    this.btnAddToCart = this.page.getByRole('button', { name: 'Add to Cart', exact: true }).first();
+    this.divSuccessAlert = this.page.getByRole('alert');
+    this.lnkViewCart = this.page
+      .getByRole('link', { name: 'View Cart' })
+      .first();
   }
 }
+
+
+
+

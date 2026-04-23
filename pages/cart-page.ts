@@ -4,7 +4,11 @@ import { step } from '../utilities/logging';
 import { CartLocators } from '../locators/cart-locators';
 import { Product } from '../models/product';
 
-const formatCurrency = (amount: number | string): string => `$${Number(amount).toFixed(2)}`;
+const formatCurrency = (amount: number): string =>
+  new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(amount);
 
 export class CartPage extends CartLocators {
   verifyCartPageDisplayed() {
@@ -17,14 +21,13 @@ export class CartPage extends CartLocators {
     super(page);
     this.commonPage = new CommonPage(page);
   }
-
+  
   /**
    * Clicks the "Cart" button to navigate to the cart page.
    */
   @step('Click Cart Button')
   async clickCartButton(): Promise<void> {
     // await this.btnCart.click();
-
     if (!(await this.miniCartDrawer.isVisible())) {
       await this.btnCart.click({ force: true });
     }
@@ -39,6 +42,13 @@ export class CartPage extends CartLocators {
   async clickCheckoutButton(): Promise<void> {
     await this.commonPage.roleButtonName('Checkout', true).click();
 
+  }
+
+
+
+  @step('Update Quantity')
+  async updateQuantity(quantity: number, productName: string): Promise<void> {
+    await this.inputQuantity(productName).fill(quantity.toString());
   }
 
   /**
@@ -109,6 +119,15 @@ export class CartPage extends CartLocators {
    * Verifies that a specific product has been removed from the cart by checking that it no longer appears in the cart table
    * @param product
    */
+  @step('Click Update Quantity Button')
+  async clickUpdateQuantity(productName: string): Promise<void> {
+    await this.btnUpdate(productName).click({ force: true });
+  }
+
+  /**
+  * Verifies that a specific product has been removed from the cart by checking that it no longer appears in the cart table
+  * @param product
+  */
   @step('Verifying that a specific product has been removed from the cart by checking that it no longer appears in the cart table')
   async verifyProductRemovedFromCart(product: Product): Promise<void> {
     await expect(this.rowProduct(product.name)).not.toBeVisible();
