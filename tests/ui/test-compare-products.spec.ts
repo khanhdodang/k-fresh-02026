@@ -16,10 +16,8 @@ test.describe('Compare Products Tests', () => {
     await commonPage.verifyPageLoaded();
 
     // ── STEP 3-5: Add HTC Touch HD, check toast and close ──
-    await productPage.clickAddToCompareButton('HTC Touch HD');
+    await productPage.performActionOnProduct('HTC Touch HD', 'Compare');
     await productPage.verifyProductInToast('HTC Touch HD');
-
-    // await categoryPage.addAndVerifyProductInToast(PRODUCTS.HTC, 1);
     // await categoryPage.closeToast();
 
     // ── STEP 6-8: Add Palm Treo Pro, check toast ─────────

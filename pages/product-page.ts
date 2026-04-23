@@ -1,12 +1,16 @@
-import test, { expect, Page } from '@playwright/test';
-import { Constants, WAIT_SECONDS } from '../utilities/constants';
+import { expect, Page } from '@playwright/test';
+import { WAIT_SECONDS } from '../utilities/constants';
 import { CommonPage } from './common-page';
 import { step } from '../utilities/logging';
 import { ProductLocators } from '../locators/product-locators';
 import { Product } from '../models/product';
 
-export class ProductPage extends ProductLocators {
+/**
+ * Defines available interaction types for products on the category page.
+ */
+export type ProductAction = 'Add to Cart' | 'Wishlist' | 'Compare' | 'Quick View';
 
+export class ProductPage extends ProductLocators {
   commonPage: CommonPage;
 
   constructor(page: Page) {
@@ -15,83 +19,83 @@ export class ProductPage extends ProductLocators {
   }
 
   /**
-     * Clicks the "Add to Compare" button for the specified product.
-     */
-  /**
-     * Clicks the "Add to Compare" button for the specified product using ID.
-     * @param productName The name of the product for which to click the button.
-     */
+   * Specifically handles adding a product to the comparison list.
+   * @param productName - Name of the product to compare.
+   */
   @step('Click Add to Compare Button')
   async clickAddToCompareButton(productName: string): Promise<void> {
-    // 1. Find the product thumbnail based on the product name
+    // Reuse the central action method for consistency
+    await this.performActionOnProduct(productName, 'Compare');
+  }
+
+  /**
+   * Main orchestrator to perform various actions on a product.
+   * Handles scrolling, ID extraction, hovering, and dynamic button selection.
+   * @param productName - Target product name.
+   * @param action - Action type to execute.
+   */
+  @step('Perform action on product')
+  async performActionOnProduct(productName: string, action: ProductAction): Promise<void> {
+    // 1. Locate the product thumbnail and ensure it's in the viewport
     const targetProduct = this.productThumbnaiByName(productName);
-
-    // 2. Extract the product ID from the href of the product name link.
-    const nameLink = targetProduct.locator('//h4//a');
-    const href = await nameLink.getAttribute('href') || '';
-    const idMatch = href.split(/product_id=(\d+)/);
-
-    if (!idMatch) {
-      throw new Error(`Cannot find ID for product: ${productName}`);
-    }
-
-    const productId = idMatch[1];
-
-    // 3. Scroll đến product thumbnail và hover để hiển thị button
     await targetProduct.scrollIntoViewIfNeeded();
+
+    // 3. Hover over the thumbnail to reveal hidden action buttons
     await targetProduct.hover();
 
-    // 4. Find the "Add to Compare" button using the product ID and click it
-    const btnCompare = this.btnCompareById(productId);
+    // 4. Select the appropriate locator based on the requested action
+    let actionBtn;
+    switch (action) {
+      case 'Add to Cart':
+        actionBtn = this.btnAddCart(productName);
+        break;
+      case 'Wishlist':
+        actionBtn = this.btnAddWishlist(productName);
+        break;
+      case 'Compare':
+        actionBtn = this.btnCompare(productName);
+        break;
+      case 'Quick View':
+        actionBtn = this.btnQuickView(productName);
+        break;
+      default:
+        throw new Error(`Unsupported action: "${action}"`);
+    }
 
-    // Verify the button is visible before clicking
-    await btnCompare.waitFor({
-      state: 'visible',
-      timeout: WAIT_SECONDS.ELEMENT_VISIBLE
+    // 5. Wait for the button to be interactable and click it
+    await actionBtn.waitFor({ 
+        state: 'visible', 
+        timeout: WAIT_SECONDS.ELEMENT_VISIBLE 
     });
-    await btnCompare.click();
+    await actionBtn.click();
 
-    // 5. Wait for the toast message to appear and the system to finish processing
-    await this.page.waitForLoadState('domcontentloaded');
-  }
-  /**
-   * Clicks the "Quick View" button for the specified product.
-   * @param productName The name of the product for which to click the button.
-   */
-  @step('Click Quick View Button')
-  async clickQuickViewButton(productName: string): Promise<void> {
+    // 6. Wait for background processes to settle (Network Idle)
+    await this.page.waitForLoadState('networkidle');
   }
 
   /**
-   *  Clicks the "Inquiry" button for the specified product.
-   * @param productName 
+   * Scrapes all visible products on the page and converts them into Product objects.
+   * Useful for dynamic data-driven testing.
    */
-  @step('Click Inquiry Button')
-  async clickInqueryButton(productName: string): Promise<void> {
-  }
-
-  /**
-   * Compares the details of the specified product with the details of the same product in the comparison list.
-   * @param actualProduct The details of the product on the product page.
-   * @param expectedProduct The details of the same product in the comparison list.
-   */
-  @step('Compare Product Details')
-  async compareProductDetails(actualProduct: Product, expectedProduct: Product): Promise<void> {
-  }
-
   @step('Get all products on the page')
   async getAllProducts(): Promise<Product[]> {
     const products: Product[] = [];
+    
+    // Ensure at least one product is loaded before scraping
     await this.productThumbnail.first().waitFor({ state: 'visible' });
 
     const count = await this.productName.count();
 
     for (let i = 0; i < count; i++) {
+      // Use .nth(i) to target specific elements in the list
       const nameElement = this.productName.nth(i);
       const name = await nameElement.innerText();
       const priceText = await this.productPrice.nth(i).innerText();
+      
+      // Clean price string and convert to number (e.g., "$122.00" -> 122)
       const price = Number(priceText.replace(/[^0-9.-]+/g, ""));
 
+      // Retrieve ID from the product link
       const href = await nameElement.getAttribute('href') || '';
       const idMatch = href.match(/product_id=(\d+)/);
       const id = idMatch ? Number(idMatch[1]) : 0;
@@ -99,20 +103,27 @@ export class ProductPage extends ProductLocators {
       products.push({
         id: id,
         name: name.trim(),
-        description: "",
+        description: "", // Placeholder: Detailed info usually requires opening product page
         price: price,
-        imageUrl: "",
-        brand: "",
+        imageUrl: "",    // Placeholder: Can be implemented by selecting the img src
+        brand: "",       // Placeholder
       });
     }
     return products;
   }
 
-  @step('Verify Toast Message After Adding To Compare')
+  /**
+   * Validates the success message displayed in the toast notification.
+   * @param expectedName - The product name expected to be in the message.
+   */
+  @step('Verify Toast Message')
   async verifyProductInToast(expectedName: string): Promise<void> {
     const expectedMessage = `Success: You have added ${expectedName} to your product comparison!`;
-    await expect(this.commonPage.toastMessage).toBeVisible();
+    
+    // Wait for the toast to appear before assertion
+    await this.commonPage.toastMessage.waitFor({ state: 'visible' });
+    
+    // Assert that the toast contains the expected success text
     await expect(this.commonPage.toastMessage).toContainText(expectedMessage);
   }
 }
-
