@@ -1,1 +1,1 @@
-export type ENV = 'qa' | 'prod' | 'staging' | 'dev';
+export type ENV = "qa" | "prod" | "staging" | "dev";

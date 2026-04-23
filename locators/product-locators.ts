@@ -9,7 +9,7 @@ export class ProductLocators extends CommonLocators {
 
   // Product detail locators
   lnkProduct!: Locator;
-  btnSearch!: Locator
+  btnSearch!: Locator;
   lblProductTitle!: Locator;
   lblProductPrice!: Locator;
   lblStockStatus!: Locator;
@@ -43,7 +43,9 @@ export class ProductLocators extends CommonLocators {
 
   locatorInitialization(): void {
     super.locatorInitialization();
-    this.btnSearch = this.page.locator('(//input[@placeholder="Search For Products"])').first();
+    this.btnSearch = this.page
+      .locator('(//input[@placeholder="Search For Products"])')
+      .first();
     this.lblProductTitle = this.page.locator("h1").first();
     this.lblProductPrice = this.page.locator('//h3[@data-update="price"]');
     this.lblStockStatus = this.page.locator(

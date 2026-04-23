@@ -27,10 +27,12 @@ export class ProductPage extends ProductLocators {
   }
 
   async expectCompareNotificationBox(): Promise<void> {
-    await test.step('Verify compare notification box', async () => {
+    await test.step("Verify compare notification box", async () => {
       await expect(this.boxCompareNotificationTop).toBeVisible();
       await expect(this.boxCompareNotificationContent).toBeVisible();
-      await expect(this.boxCompareNotificationContent).toContainText(/success|added to your product comparison/i);
+      await expect(this.boxCompareNotificationContent).toContainText(
+        /success|added to your product comparison/i,
+      );
     });
   }
 
@@ -43,9 +45,8 @@ export class ProductPage extends ProductLocators {
   async openProductDetail(productName: string): Promise<void> {
     await test.step(`Search product: ${productName}`, async () => {
       await this.btnSearch.fill(productName);
-      await this.page.keyboard.press('Enter');
+      await this.page.keyboard.press("Enter");
       await this.page.waitForLoadState(Constants.LOAD_STATE.NETWORK_IDLE);
-
     });
 
     await test.step(`Open product detail: ${productName}`, async () => {
@@ -92,8 +93,7 @@ export class ProductPage extends ProductLocators {
    */
 
   @step("Check Quantity Counter Functionality")
-  async checkQuantityCounterFunctionality(productName: string
-  ): Promise<void> {
+  async checkQuantityCounterFunctionality(productName: string): Promise<void> {
     await this.clickProductLink(productName);
     const initialValue = await this.inputQuantity.inputValue();
     await test.step("Verify initial quantity", async () => {
@@ -101,12 +101,10 @@ export class ProductPage extends ProductLocators {
       //check initial quantity is a valid number and greater than 0
       expect(initialValue).toMatch(/^\d+$/);
       expect(parseInt(initialValue)).toBeGreaterThan(0);
-   
-    })
-    
-     
+    });
+
     await test.step("Increment quantity and verify", async () => {
-      await expect (this.btnIncreaseQuantity).toBeVisible();
+      await expect(this.btnIncreaseQuantity).toBeVisible();
       const times = 3;
       for (let i = 0; i < times; i++) {
         await this.btnIncreaseQuantity.click();
@@ -128,15 +126,21 @@ export class ProductPage extends ProductLocators {
       // Final quantity should be initial value + 1 (3 increments - 2 decrements)
       const expectedValue = 1;
       expect(parseInt(finalValue)).toBe(expectedValue);
-    }); 
+    });
 
+    await test.step("Fill quantity input directly and verify", async () => {
+      const directValue = "5";
+      await this.inputQuantity.fill(directValue);
+      await this.page.waitForTimeout(500);
+      const finalValue = await this.inputQuantity.inputValue();
+      expect(finalValue).toBe(directValue);
+    });
   }
 
   /**
    * Check Size Chart functionality by opening the size chart, verifying the table is visible, closing the size chart, and verifying the table is no longer visible.
    */
   @step("Check Size Chart Functionality")
-
   async checkSizeChartFunctionality(productName: string): Promise<void> {
     await this.clickProductLink(productName);
     await test.step("Open size chart and verify table is visible", async () => {
@@ -162,7 +166,6 @@ export class ProductPage extends ProductLocators {
    */
   @step("Check Pop-up Functionality")
   async checkPopupFunctionality(productName: string): Promise<void> {
-
     await this.clickProductLink(productName);
     await test.step("Open pop-up and verify content is visible", async () => {
       await this.lnkPopup.click();
@@ -179,14 +182,14 @@ export class ProductPage extends ProductLocators {
    * @param productName The name of the product for which to click the button.
    */
   @step("Click Quick View Button")
-  async clickQuickViewButton(productName: string): Promise<void> { }
+  async clickQuickViewButton(productName: string): Promise<void> {}
 
   /**
    *  Clicks the "Inquiry" button for the specified product.
    * @param productName
    */
   @step("Click Inquiry Button")
-  async clickInqueryButton(productName: string): Promise<void> { }
+  async clickInqueryButton(productName: string): Promise<void> {}
 
   /**
    * Compares the details of the specified product with the details of the same product in the comparison list.
@@ -197,5 +200,5 @@ export class ProductPage extends ProductLocators {
   async compareProductDetails(
     actualProduct: Product,
     expectedProduct: Product,
-  ): Promise<void> { }
+  ): Promise<void> {}
 }
