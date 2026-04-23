@@ -23,12 +23,16 @@ test.describe("Home Tests", () => {
    * TC-WL-002: Add Product to Wishlist
    * Verify the second product can be added to Wishlist and appears in the table
    */
-  test("TC-WL-002: Add Product to Wishlist", async ({ homePage, commonPage, page, }) => {
+  test("TC-WL-002: Add Product to Wishlist", async ({ homePage, wishlistPage, commonPage }) => {
+
     await commonPage.goto(Constants.HOME_URL);
 
-    await homePage.addFirstProductToWishlist();
+    const productName = await homePage.addFirstProductToWishlist();
 
-    await expect(page).toHaveURL(Constants.WISHLIST_URL);
+    await homePage.verifyProductAddedToWishlist(productName);
+
+    await homePage.clickWishListIcon();
+
+    await wishlistPage.verifyProductExists(productName);
   });
-
 });

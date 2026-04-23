@@ -8,7 +8,7 @@ test.describe('Login Tests', () => {
     await commonPage.goto(Constants.LOGIN_URL);
   });
 
-  test('login on the-internet secure area', async ({ loginPage, commonPage }) => {
+  test('login on the-internet secure area', async ({ loginPage }) => {
     await loginPage.login(user);
     await loginPage.expectSuccessfulLogin();
   });
