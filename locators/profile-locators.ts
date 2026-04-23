@@ -29,7 +29,6 @@ export class ProfileLocators extends CommonLocators {
 
   constructor(page: Page) {
     super(page);
-    this.locatorInitialization();
   }
 
   locatorInitialization(): void {
