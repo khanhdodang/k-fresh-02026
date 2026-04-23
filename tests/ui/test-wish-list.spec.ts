@@ -9,7 +9,4 @@ test.describe('Wish List Tests', () => {
     await loginPage.login(user);
   });
 
-  test('verify abc', async ({  }) => {
-  });
-
 });

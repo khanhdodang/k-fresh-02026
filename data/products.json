@@ -1,0 +1,22 @@
+{
+  "qa": {
+    "name": "MacBook Pro",
+    "quantity": 2,
+    "price": 2000
+  },
+  "staging": {
+    "name": "MacBook Pro",
+    "quantity": 2,
+    "price": 2000
+  },
+  "uat": {
+    "name": "MacBook Pro",
+    "quantity": 2,
+    "price": 2000
+  },
+  "production": {
+    "name": "MacBook Pro",
+    "quantity": 2,
+    "price": 2000
+  }
+}
