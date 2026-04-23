@@ -1,12 +1,11 @@
-import test, { expect, Page } from '@playwright/test';
-import { Constants } from '../utilities/constants';
+import { expect, Page, test } from '@playwright/test';
+import { AddressLocators } from '../locators/address-book-locators';
+import { Address } from '../models/address';
 import { CommonPage } from './common-page';
 import { step } from '../utilities/logging';
-import { AddressBookLocators } from '../locators/address-book-locators';
-import { Address } from '../models/address';
+import { Constants } from '../utilities/constants';
 
-export class AddressBookPage extends AddressBookLocators {
-
+export class AddressBookPage extends AddressLocators {
   commonPage: CommonPage;
 
   constructor(page: Page) {
@@ -15,45 +14,166 @@ export class AddressBookPage extends AddressBookLocators {
   }
 
   /**
-   * Clicks the "New Address" button to navigate to the address creation form.
+   * Navigate to Address Book page
    */
-  @step('Click New Address Button')
-  async clickNewAddressButton(): Promise<void> {
-    // TODO: Implement the logic to click the "New Address" button using the locator defined in AddressBookLocators.
+  @step('Navigating to Address Book page')
+  async goto(): Promise<void> {
+    await test.step('Navigating to Address Book page', async () => {
+      await this.page.goto(Constants.ADDRESS_BOOK_URL);
+    });
   }
 
   /**
-   * Clicks the "Submit" button to save the new address.
-   * This method is decorated with @step for reporting purposes.
+   * Click New Address button
    */
-  @step('Click Submit Button')
-  async clickSubmitButton(): Promise<void> {
-  
+  @step('Clicking New Address button')
+  async clickNewAddress(): Promise<void> {
+    await test.step('Clicking New Address button', async () => {
+      await this.btnNewAddress.click();
+    });
   }
 
   /**
-   * Fills the address form with the provided address data.
-   * @param address 
+   * Fill address form
    */
-  @step('Fill Address Form')
+  @step('Filling address information')
   async fillAddressForm(address: Address): Promise<void> {
-    // TODO: Implement the logic to fill the address form with the provided address data.
+    await test.step('Filling address information', async () => {
+      await this.inputFirstName.fill(address.firstName);
+      await this.inputLastName.fill(address.lastName);
+      await this.inputCompany.fill(address.company);
+      await this.inputAddress1.fill(address.address1);
+      await this.inputAddress2.fill(address.address2);
+      await this.inputCity.fill(address.city);
+      await this.inputPostCode.fill(address.postCode);
+
+      await this.selectCountry.selectOption({ label: address.country });
+      await expect(this.selectRegion).toBeEnabled();
+      await this.selectRegion.selectOption({ label: address.region });
+    });
   }
 
   /**
-   * Verifies that the new address has been added successfully by checking for the presence of the address details on the page.
-   * @param address 
+   * Leaving all fields blank 
    */
-  @step('Verify Address Added')
-  async verifyAddressAdded(address: Address): Promise<void> {
+  @step('Leaving all fields blank and submitting the form')
+  async submitEmptyAddressForm(): Promise<void> {
+    await test.step('Leaving all fields blank and submitting the form', async () => {
+      await this.btnContinue.click();
+    });
   }
 
   /**
-   * Verifies that the created address message is displayed.
+   * Submit address form
    */
-  @step('Verify Created Address Message')
-  async verifyCreatedAddressMessage(): Promise<void> {
-  
+  @step('Submitting address form')
+  async submit(): Promise<void> {
+    await test.step('Submitting address form', async () => {
+      await this.btnContinue.click();
+    });
   }
+
+  /**
+   * Verify success message
+   */
+  @step('Verifying address added successfully')
+  async verifySuccess(): Promise<void> {
+    await test.step('Verifying address added successfully', async () => {
+      await expect(this.successMessage).toContainText(
+        'Your address has been successfully added'
+      );
+    });
+  }
+  /**
+ * Verify failure message
+ */
+  @step('Verify required field validation messages')
+  async verifyRequiredFieldErrors(): Promise<void> {
+    await expect(this.fieldError('firstname')).toHaveText(
+      'First Name must be between 1 and 32 characters!'
+    );
+
+    await expect(this.fieldError('lastname')).toHaveText(
+      'Last Name must be between 1 and 32 characters!'
+    );
+
+    await expect(this.fieldError('address_1')).toHaveText(
+      'Address must be between 3 and 128 characters!'
+    );
+
+    await expect(this.fieldError('city')).toHaveText(
+      'City must be between 2 and 128 characters!'
+    );
+
+    await expect(this.regionError()).toHaveText(
+      'Please select a region / state!'
+    );
+  }
+
+  /**
+   * Click Edit button of the first address in the list
+   */
+  @step('Clicking Edit button of the first address')
+  async clickEditFirstAddress(): Promise<void> {
+    await test.step('Click edit button of the first address', async () => {
+      await this.btnEdit.first().click();
+    });
+  }
+
+  /**
+   * Verify success message after updating address
+   */
+  @step('Verifying address updated successfully')
+  async verifyUpdateSuccess(): Promise<void> {
+    await test.step('Verifying address updated successfully', async () => {
+      await expect(this.successMessage).toContainText(
+        'Your address has been successfully updated'
+      );
+    })
+  }
+
+  /**
+ * Click Delete button of the address in the list
+ */
+  @step('Click Delete button of the last address')
+  async clickDeleteLastAddress(): Promise<void> {
+    await test.step('Click Delete button of the last address', async () => {
+      const total = await this.btnDelete.count();
+
+      await this.btnDelete.nth(total - 1).click();
+    });
+  }
+  /**
+* Click Delete button of the address in the list
+*/
+  @step('Click Delete button of the default address')
+  async clickDelDefaultAddress(): Promise<void> {
+    await test.step('Click Delete button of the last address', async () => {
+      await this.btnDelete.first().click();
+    });
+  }
+
+  /**
+   * Verify success message after deleting address
+   */
+  @step('Verifying address deleted successfully')
+  async verifyDeleteSuccess(): Promise<void> {
+    await test.step('Verifying address deleted successfully', async () => {
+      await expect(this.successMessage).toContainText(
+        'Your address has been successfully deleted'
+      );
+    })
+  }
+
+  /** 
+   * Verify default address cannot be deleted
+   */
+  @step('Verifying default address cannot be deleted')
+  async verifyDeleteFail(): Promise<void> {
+    await expect(this.failureMessage).toContainText(
+      'Warning: You can not delete your default address!'
+    );
+  }
+
 
 }

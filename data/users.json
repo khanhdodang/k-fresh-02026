@@ -1,18 +1,6 @@
 {
-    "qa": {
-        "username": "tomsmith",
-        "password": "SuperSecretPassword!"
-    },
-    "prod": {
-        "username": "prod_user",
-        "password": "ProdSecretPassword!"
-    },
-    "staging": {
-        "username": "staging_user",
-        "password": "StagingSecretPassword!"
-    },
-    "dev": {
-        "username": "dev_user",
-        "password": "DevSecretPassword!"
-    }
+  "qa": {
+    "email": "bichloanqb455@gmail.com",
+    "password": "12345"
+  }
 }

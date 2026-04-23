@@ -16,13 +16,24 @@ export class LoginPage extends LoginLocators {
   }
 
   /**
+   * Navigate to the login page
+   * @param url The URL of the login page
+   */
+  @step('Navigating to Login page')
+  async goto(): Promise<void> {
+    await test.step('Navigating to Login page', async () => {
+      await this.page.goto(Constants.LOGIN_URL);
+    });
+  }
+  
+  /**
    *  Logs in using the provided user credentials.
    * @param user An object containing the username and password for login.
    */
   @step('Log in with user credentials')
   async login(user: User): Promise<void> {
-    await test.step(`Log in with username: ${user.username}`, async () => {
-      await this.inputUsername.fill(user.username);
+    await test.step(`Log in with email: ${user.email}`, async () => {
+      await this.inputEmail.fill(user.email);
       await this.inputPassword.fill(user.password);
       await this.btnSubmit.click();
     });

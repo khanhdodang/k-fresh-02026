@@ -1,12 +1,50 @@
 import { test } from '../../pages/base-page';
 import { user } from '../../data/login.data';
-import { Constants } from '../../utilities/constants';
+import { generateAddressData } from '../../data/address.data';
 
-test.describe('Address Book Tests', () => {
-
-  test.beforeEach(async ({ commonPage, loginPage }) => {
-    await commonPage.goto(Constants.LOGIN_URL);
+test.describe('Address Book', () => {
+  test.beforeEach(async ({ loginPage }) => {
+    await loginPage.goto();
     await loginPage.login(user);
   });
+
+  test('TC_01 - Add new address successfully', async ({ addressBookPage }) => {
+    const addressData = generateAddressData();
+    await addressBookPage.goto();
+    await addressBookPage.clickNewAddress();
+    await addressBookPage.fillAddressForm(addressData);
+    await addressBookPage.submit();
+    await addressBookPage.verifySuccess();
+  });
+
+  test('TC_02 - Add new address with required fields empty', async ({ addressBookPage }) => {
+    await addressBookPage.goto();
+    await addressBookPage.clickNewAddress();
+    await addressBookPage.submit();
+    await addressBookPage.verifyRequiredFieldErrors();
+  });
+
+  test('TC_03 - Edit existing address successfully', async ({ addressBookPage }) => {
+  const updatedAddressData = generateAddressData();
+  await addressBookPage.goto();
+  await addressBookPage.clickEditFirstAddress();
+  await addressBookPage.fillAddressForm(updatedAddressData);
+  await addressBookPage.submit();
+  await addressBookPage.verifyUpdateSuccess();
+  });
+
+  test('TC_04 - Delete existing address successfully', async ({ addressBookPage }) => {
+  await addressBookPage.goto();
+  await addressBookPage.clickDeleteLastAddress();
+  await addressBookPage.verifyDeleteSuccess();
+  });
+
+  test('TC_05 - Delete default address failure', async ({ addressBookPage }) => {
+  await addressBookPage.goto();
+  await addressBookPage.clickDelDefaultAddress();
+  await addressBookPage.verifyDeleteFail();
+  });
+
+  
 
 });

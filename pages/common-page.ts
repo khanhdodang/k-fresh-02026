@@ -11,6 +11,19 @@ export class CommonPage extends CommonLocators {
         super(page);
     }
 
+     /**
+     * Go to the URL
+     * @param url
+     */
+    @step('Go to the URL')
+    async goto(url: string, isWait: boolean = true): Promise<void> {
+        await this.page.goto(url);
+        await this.page.waitForLoadState();
+        if (isWait) {
+            await Utility.delay(3);
+        }
+    }
+
     /**
      * Click on Locator
      * @param locator
@@ -350,18 +363,7 @@ export class CommonPage extends CommonLocators {
         await this.page.close();
     }
 
-    /**
-     * Go to the URL
-     * @param url
-     */
-    @step('Go to the URL')
-    async goto(url: string, isWait: boolean = true): Promise<void> {
-        await this.page.goto(url);
-        await this.page.waitForLoadState();
-        if (isWait) {
-            await Utility.delay(3);
-        }
-    }
+   
 
     /**
      * Reload page
