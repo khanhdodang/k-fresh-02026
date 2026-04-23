@@ -21,7 +21,7 @@ export class LoginPage extends LoginLocators {
   @step('Log in with user credentials')
   async login(user: User): Promise<void> {
     await test.step(`Log in with username: ${user.username}`, async () => {
-      await this.inputUsername.fill(user.username);
+      await this.inputEmail.fill(user.username);
       await this.inputPassword.fill(user.password);
       await this.btnSubmit.click();
     });
@@ -33,7 +33,6 @@ export class LoginPage extends LoginLocators {
   async expectSuccessfulLogin(): Promise<void> {
     await test.step('Verify successful login', async () => {
       await expect(this.page).toHaveURL(Constants.SECURE_URL);
-      await expect(this.flashMessage).toContainText(Constants.SUCCESS_MESSAGE);
     });
   }
 }
