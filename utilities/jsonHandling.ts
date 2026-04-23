@@ -19,3 +19,10 @@ export function readJsonFile<T = unknown>(filePath: string, env?: string): T {
 
   return data[env.toLowerCase()] as T;
 }
+
+
+export function writeJsonFile<T = unknown>(filePath: string, data: T): void {
+  const resolvedPath = path.resolve(filePath);
+  const jsonData = JSON.stringify(data, null, 2);
+  writeFileSync(resolvedPath, jsonData, 'utf8'); 
+}

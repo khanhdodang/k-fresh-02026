@@ -4,4 +4,7 @@ export interface Product {
     description: string;
     price: number;
     imageUrl: string;
+    brand: string;
+    weight?: string;
+    model?: string;
 }

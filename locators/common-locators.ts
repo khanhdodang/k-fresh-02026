@@ -16,6 +16,7 @@ export class CommonLocators {
         return this.page;
     }
 
+    //buttons
     btnSave!: Locator;
     btnCancel!: Locator;
     btnEdit!: Locator;
@@ -26,16 +27,29 @@ export class CommonLocators {
     btnCancelDelete!: Locator;
     inputSearch!: Locator;
 
+    sidebarMenu!: Locator;
+
+    //top category item
+    itemTopCategory!: Locator;
+
+    //toast
+    toastMessage!: Locator;
+    btnToastClose!: Locator;
+
     locatorInitialization(): void {
         this.btnSave = this.page.locator('button:has-text("Save")');
         this.btnCancel = this.page.locator('button:has-text("Cancel")');
         this.btnEdit = this.page.locator('button:has-text("Edit")');
         this.btnDelete = this.page.locator('button:has-text("Delete")');
         this.btnAddNew = this.page.locator('button:has-text("Add New")');
-        this.btnSubmit = this.page.locator('button[type="submit"]');
+        this.btnSubmit = this.page.locator('//input[@type="submit"]');
         this.btnConfirmDelete = this.page.locator('button:has-text("Confirm Delete")');
         this.btnCancelDelete = this.page.locator('button:has-text("Cancel Delete")');
-        this.inputSearch = this.page.locator('input[placeholder="Search"]');
+        this.inputSearch = this.page.locator('//input[@placeholder="Search"]');
+        this.sidebarMenu = this.page.locator('//a[text()=" Shop by Category"]');
+        this.itemTopCategory = this.page.locator('//span[contains(text()," Phone, Tablets & Ipod")]');
+        this.toastMessage = this.page.locator('//div[contains(@class,"toast")]//p');
+        this.btnToastClose = this.page.locator('//button[contains(@class,"toast-close-button")]');
     }
 
     /**
