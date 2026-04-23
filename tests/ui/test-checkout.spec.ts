@@ -4,7 +4,7 @@ import { Logger } from '../../utilities/logger';
 import { Constants } from '../../utilities/constants';
 
 // Set the global timeout for all test cases within this specific test suite
-test.setTimeout(Constants.TEST_TIMEOUT);
+test.setTimeout(Constants.TIMEOUTS.DEFAULT);
 
 /**
  * @title Checkout Process Test Suite
@@ -28,7 +28,7 @@ test.describe('Checkout Tests', () => {
     await registerPage.clickAgreeTermsCheckbox();
     await registerPage.submitRegistrationForm();
     await registerPage.expectSuccessfulRegistration();
-    await productPage.addSpecificItemToCart('59');
+    await productPage.buySpecificItemNow('HP LP3065');
   });
 
   // ==========================================
@@ -40,20 +40,13 @@ test.describe('Checkout Tests', () => {
    * @description Tests the robust form validation by intentionally clearing mandatory 
    * inputs and asserting that the system blocks progression and displays appropriate error text.
    */
-  test('TC_CHK_003: Verify multiple validation error messages when mandatory fields are left blank', async ({ checkoutPage, cartPage }) => {
-    Logger.info('Start TC_CHK_003: Form Validation Error Handling');
-
-    await cartPage.clickCheckoutButton();
+  test('TC_CHK_003: Verify multiple validation error messages when mandatory fields are left blank', async ({ checkoutPage }) => {
     await checkoutPage.clearBillingAddressForm();
     await checkoutPage.clearShippingAddressForm();
     await checkoutPage.acceptTermsAndContinue();
-    await checkoutPage.clickContinueButton(); 
-
-    // Assert the visibility of UI validation error messages
+    await checkoutPage.clickContinueButton();
     await checkoutPage.verifyBillingValidationErrors();
     await checkoutPage.verifyShippingValidationErrors();
-
-    Logger.info('TC_CHK_003 completed successfully!');
   });
-
 });
+
