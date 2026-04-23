@@ -28,4 +28,18 @@ test.describe("Product Tests", () => {
   }) => {
     await productPage.checkPopupFunctionality(Constants.PRODUCT_NAME);
   });
+
+  test(`verify quantity counter functionality for ${Constants.ENV} environment`, async ({
+    commonPage,
+    productPage,
+  }) => {
+    await productPage.checkQuantityCounterFunctionality(Constants.PRODUCT_NAME);
+  });
+
+  test(`verify size chart functionality for ${Constants.ENV} environment`, async ({
+    commonPage,
+    productPage,
+  }) => {
+    await productPage.checkSizeChartFunctionality(Constants.PRODUCT_NAME);
+  });
 });

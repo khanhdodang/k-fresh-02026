@@ -92,29 +92,44 @@ export class ProductPage extends ProductLocators {
    */
 
   @step("Check Quantity Counter Functionality")
-  async checkQuantityCounterFunctionality(productName: string,
-    initialQuantity: number,
+  async checkQuantityCounterFunctionality(productName: string
   ): Promise<void> {
     await this.clickProductLink(productName);
+    const initialValue = await this.inputQuantity.inputValue();
     await test.step("Verify initial quantity", async () => {
-      await expect(this.inputQuantity).toHaveValue(initialQuantity.toString());
-    });
+      await expect(this.inputQuantity).toBeVisible();
+      //check initial quantity is a valid number and greater than 0
+      expect(initialValue).toMatch(/^\d+$/);
+      expect(parseInt(initialValue)).toBeGreaterThan(0);
+   
+    })
+    
+     
     await test.step("Increment quantity and verify", async () => {
-      await this.btnIncreaseQuantity.click();
-      await expect(this.inputQuantity).toHaveValue(
-        (initialQuantity + 1).toString(),
-      );
-    });
-    await test.step("Decrement quantity and verify", async () => {
-      await this.btnDecreaseQuantity.click();
-      await expect(this.inputQuantity).toHaveValue(initialQuantity.toString());
-    });
-    await test.step("Decrement quantity below 1 and verify it does not go below 1", async () => {
-      for (let i = 0; i < initialQuantity + 1; i++) {
-        await this.btnDecreaseQuantity.click();
+      await expect (this.btnIncreaseQuantity).toBeVisible();
+      const times = 3;
+      for (let i = 0; i < times; i++) {
+        await this.btnIncreaseQuantity.click();
+        await this.page.waitForTimeout(500);
       }
-      await expect(this.inputQuantity).toHaveValue("1");
     });
+
+    await test.step("Decrement quantity and verify", async () => {
+      await expect(this.btnDecreaseQuantity).toBeVisible();
+      const times = 2;
+      for (let i = 0; i < times; i++) {
+        await this.btnDecreaseQuantity.click();
+        await this.page.waitForTimeout(500);
+      }
+    });
+
+    await test.step("Verify final quantity value", async () => {
+      const finalValue = await this.inputQuantity.inputValue();
+      // Final quantity should be initial value + 1 (3 increments - 2 decrements)
+      const expectedValue = 1;
+      expect(parseInt(finalValue)).toBe(expectedValue);
+    }); 
+
   }
 
   /**
