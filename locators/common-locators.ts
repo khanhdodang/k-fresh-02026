@@ -26,6 +26,8 @@ export class CommonLocators {
     btnCancelDelete!: Locator;
     inputSearch!: Locator;
 
+    chkAgreeTerms!: Locator;
+
     locatorInitialization(): void {
         this.btnSave = this.page.locator('button:has-text("Save")');
         this.btnCancel = this.page.locator('button:has-text("Cancel")');
@@ -36,6 +38,8 @@ export class CommonLocators {
         this.btnConfirmDelete = this.page.locator('button:has-text("Confirm Delete")');
         this.btnCancelDelete = this.page.locator('button:has-text("Cancel Delete")');
         this.inputSearch = this.page.locator('input[placeholder="Search"]');
+        this.chkAgreeTerms = this.page.locator('label[for="input-agree"]');
+
     }
 
     /**

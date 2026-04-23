@@ -27,6 +27,9 @@ export class CartPage extends CartLocators {
    */
   @step('Click Checkout Button')
   async clickCheckoutButton(): Promise<void> {
+    await this.commonPage.goto(Constants.ECOM_CHECKOUT_URL);
+
+    await expect(this.page).toHaveURL(/.*checkout\/checkout/, { timeout: Constants.TIMEOUT_SHORT });
   }
 
   /**

@@ -47,4 +47,20 @@ export class ProductPage extends ProductLocators {
   async compareProductDetails(actualProduct: Product, expectedProduct: Product): Promise<void> {
   }
 
+
+  
+  /**
+   * Temporary Mock Function to unblock Checkout tests.
+   * @param productId The ID of the product to add to the cart.
+   * Forces an item into the cart without relying on ProductLocators.
+   */
+  @step('Add Specific Item to Cart (Mock for Checkout)')
+  async addSpecificItemToCart(productId: string): Promise<void> {
+      const productUrl = `${Constants.ECOM_PRODUCT_BASE_URL}${productId}`;
+      await this.commonPage.goto(productUrl);
+      await this.page.getByRole('button', { name: 'Add to Cart' }).first().click();
+      await this.commonPage.wait(2000); 
+  }
+
+
 }
