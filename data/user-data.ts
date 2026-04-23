@@ -13,7 +13,7 @@ export const generateUserProfileData = (): UserProfile => {
       firstName: `test_${Date.now()}`,
       provider: 'gmail.com',
     }),
-    phone: faker.phone.number({ style: 'national' }),
+    telephone: `+84${faker.string.numeric(9)}`,
     password: faker.internet.password({ length: 12 }),
   };
 };

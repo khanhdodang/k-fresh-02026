@@ -22,9 +22,22 @@ export class RegisterPage extends RegisterLocators {
     await this.inputFirstName.fill(userProfile.firstName);
     await this.inputLastName.fill(userProfile.lastName);
     await this.inputEmail.fill(userProfile.email);
-    await this.inputTelephone.fill(userProfile.phone);
+    await this.inputTelephone.fill(userProfile.telephone);
     await this.inputPassword.fill(userProfile.password);
-    await this.inputPasswordConfirm.fill(userProfile.password);
+    await this.inputConfirmPassword.fill(userProfile.password);
+  }
+
+  /**
+   * Selects newsletter option (Yes or No).
+   * @param subscribe True for "Yes", false for "No".
+   */
+  @step("Select Newsletter Option")
+  async selectNewsletter(subscribe: boolean): Promise<void> {
+    if (subscribe) {
+      await this.radioNewsletterYes.check();
+    } else {
+      await this.radioNewsletterNo.check();
+    }
   }
 
   /**
