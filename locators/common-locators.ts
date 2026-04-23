@@ -66,7 +66,11 @@ export class CommonLocators {
         this.btnSubmit = this.page.locator('//input[@type="submit"]');
         this.btnConfirmDelete = this.page.locator('button:has-text("Confirm Delete")');
         this.btnCancelDelete = this.page.locator('button:has-text("Cancel Delete")');
-        this.inputSearch = this.page.locator('input[placeholder="Search"]');
+        this.inputSearch = this.page.locator('//input[@placeholder="Search"]');
+        this.sidebarMenu = this.page.locator('//a[text()=" Shop by Category"]');
+        this.itemTopCategory = this.page.locator('//span[contains(text()," Phone, Tablets & Ipod")]');
+        this.toastMessage = this.page.locator('//div[contains(@class,"toast")]//p');
+        this.btnToastClose = this.page.locator('//button[contains(@class,"toast-close-button")]');
     }
 
     /**
