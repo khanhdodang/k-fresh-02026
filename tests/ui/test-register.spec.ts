@@ -1,25 +1,24 @@
 import { test } from '../../pages/base-page';
 import { Constants } from '../../utilities/constants';
-import { RegisterPage } from '../../pages/register-page';
 import { expect } from '@playwright/test';
 import { Assertions } from '../../utilities/assertions';
 import { Messages } from '../../data/messages.data';
 import { UserProfile } from '../../models/user';
 import { generateUserProfileData } from '../../data/user-data';
+import { RegisterPage } from '../../pages/register-page';
 
 let user: UserProfile;
 
 test.describe('Register Tests', () => {
 
-  let registerPage: RegisterPage;
 
-  test.beforeEach(async ({ registerPage: rPage, commonPage }) => {
-    registerPage = rPage;
+
+  test.beforeEach(async ({ commonPage }) => {
     await commonPage.goto(Constants.REGISTER_URL);
     user = generateUserProfileData();
   });
 
-  test("TC-001: Register with valid data - success", async () => {
+  test("TC-001: Register with valid data - success", async ({ registerPage }) => {
     // Note: Since email must be unique, faker in register.data.ts helps
     // but if the test runs multiple times in the same session, we might need new data.
     await registerPage.fillRegistrationForm(user);
@@ -38,7 +37,7 @@ test.describe('Register Tests', () => {
     );
   });
 
-  test("TC-002: Register without filling any required fields", async () => {
+  test("TC-002: Register without filling any required fields", async ({ registerPage }) => {
     await registerPage.submitRegistrationForm();
 
     // Verify validation messages appear for all required fields
@@ -50,7 +49,7 @@ test.describe('Register Tests', () => {
     Assertions.assertEqual((await registerPage.errorAgree.textContent())?.trim(), Messages.REGISTER_ERROR_PRIVACY_POLICY);
   });
 
-  test("TC-003: Register with invalid email format", async ({ page }) => {
+  test("TC-003: Register with invalid email format", async ({ registerPage, page }) => {
     const invalidUser = { ...user, email: "invalid-email-format" };
     await registerPage.fillRegistrationForm(invalidUser);
     await registerPage.clickAgreeTermsCheckbox();
@@ -67,7 +66,7 @@ test.describe('Register Tests', () => {
     Assertions.assertEqual(validationMessage, `Please include an '@' in the email address. '${emailValue}' is missing an '@'.`);
   });
 
-  test("TC-004: Register with password mismatch", async ({ page }) => {
+  test("TC-004: Register with password mismatch", async ({ registerPage }) => {
     await registerPage.fillRegistrationForm(user);
     await registerPage.inputConfirmPassword.fill("mismatchpassword123");
     await registerPage.clickAgreeTermsCheckbox();
@@ -77,7 +76,7 @@ test.describe('Register Tests', () => {
     Assertions.assertEqual((await registerPage.errorConfirmPassword.textContent())?.trim(), Messages.REGISTER_ERROR_PASSWORD_CONFIRM);
   });
 
-  test("TC-005: Register without agreeing to Privacy Policy", async ({ page }) => {
+  test("TC-005: Register without agreeing to Privacy Policy", async ({ registerPage }) => {
     await registerPage.fillRegistrationForm(user);
     await registerPage.submitRegistrationForm();
 
