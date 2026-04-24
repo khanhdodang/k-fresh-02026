@@ -1,22 +1,25 @@
+// Use fakerVI for generating realistic Vietnamese user data and addresses, enhancing test relevance for VN market.
+import { fakerVI as faker } from '@faker-js/faker';
 import { Address } from '../models/address';
 import { UserProfile } from '../models/user';
 
+/** Generates a realistic Vietnamese user profile */
 export function generateUserProfile(): UserProfile {
-    const timestamp = new Date().getTime();
     return {
-        email: `tester_${timestamp}@automation.com`,
-        firstName: 'Dung',
-        lastName: 'Luong',
-        password: 'Password123!',
-        phone: '0901234567'
+        email: faker.internet.email(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        password: faker.internet.password({ length: 12 }) + '1!Aa',
+        phone: faker.phone.number()
     };
 }
 
+/**  Generates a realistic Vietnamese address */
 export function generateAddress(): Address {
     return {
-        street: '123 Nguyen Van Cu',
-        city: 'Ho Chi Minh',
-        state: '3200', 
+        street: faker.location.streetAddress(),
+        city: faker.location.city(),
+        state: '3200',
         zipCode: '700000'
     };
 }

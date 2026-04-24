@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test';
+import { expect, Page, Locator } from '@playwright/test';
 import { Constants } from '../utilities/constants';
 import { CommonPage } from './common-page';
 import { step } from '../utilities/logging';
@@ -21,7 +21,7 @@ export class CheckoutPage extends CheckoutLocators {
     super(page);
     this.commonPage = new CommonPage(page);
   }
-  
+
   /**
    * Finalizes the order by clicking the confirmation button.
    * Redirects to the confirm success state.
@@ -50,16 +50,18 @@ export class CheckoutPage extends CheckoutLocators {
    */
   @step('Click Continue Button')
   async clickContinueButton(): Promise<void> {
-    await this.page.getByRole('button', { name: 'Continue' }).first().click();
+    await this.page.waitForLoadState('networkidle');
+    await this.commonPage.scrollTo(this.btnContinueGeneric);
+    await this.commonPage.click(this.btnContinueGeneric);
     await this.commonPage.waitForMillis(Constants.TIMEOUTS.BUFFER_STEP_SECONDS * 1000);
   }
 
   /**
    * Stub method to retrieve the current product list in the checkout summary.
-   * @returns {Promise<any[]>} An empty array (to be implemented).
+   * @returns {Promise<string[]>} An empty array (to be implemented).
    */
   @step('Get Product List')
-  async getProductList(): Promise<any[]> {
+  async getProductList(): Promise<string[]> {
     return [];
   }
 
@@ -69,6 +71,7 @@ export class CheckoutPage extends CheckoutLocators {
    */
   @step('Remove Product from Checkout')
   async removeProductFromCheckout(_productName: string): Promise<void> {
+    Logger.info(`Stub action: Preparing to remove ${_productName} from cart...`);
   }
 
   /**
@@ -103,7 +106,7 @@ export class CheckoutPage extends CheckoutLocators {
 
     await this.ddlBillingCountry.selectOption('230');
     await this.commonPage.waitForMillis(Constants.TIMEOUTS.PERFORM_LOADING * 1000);
-    await this.ddlBillingZone.selectOption(address.state || { index: 1 });
+    await this.ddlBillingZone.selectOption({ index: 1 });
     await this.commonPage.waitForMillis(Constants.TIMEOUTS.BUFFER_STEP_SECONDS * 1000);
   }
 
@@ -130,7 +133,7 @@ export class CheckoutPage extends CheckoutLocators {
 
     await this.ddlShippingCountry.selectOption('230');
     await this.commonPage.waitForMillis(Constants.TIMEOUTS.PERFORM_LOADING * 1000);
-    await this.ddlShippingZone.selectOption(address.state || { index: 2 });
+    await this.ddlShippingZone.selectOption({ index: 1 });
     await this.commonPage.waitForMillis(Constants.TIMEOUTS.BUFFER_STEP_SECONDS * 1000);
   }
 
@@ -180,8 +183,8 @@ export class CheckoutPage extends CheckoutLocators {
    */
   @step('Verify Billing Validation Errors')
   async verifyBillingValidationErrors(): Promise<void> {
-    await expect(this.divPaymentSection.getByText(/First Name must be between/i)).toBeVisible({ timeout: Constants.TIMEOUTS.WAIT_ELEMENT_VISIBLE });
-    await expect(this.divPaymentSection.getByText(/Last Name must be between/i)).toBeVisible();
+    await expect(this.lblErrorBillingFirstName).toBeVisible({ timeout: Constants.TIMEOUTS.WAIT_ELEMENT_VISIBLE });
+    await expect(this.lblErrorBillingLastName).toBeVisible();
   }
 
   /**
@@ -191,7 +194,7 @@ export class CheckoutPage extends CheckoutLocators {
    * @returns {Promise<number>} The parsed numeric price value.
    */
   @step('Extract Price Value by Label')
-  async getPriceValue(locator: any, stepLogName: string): Promise<number> {
+  async getPriceValue(locator: Locator, stepLogName: string): Promise<number> {
     let text = '';
     if (await locator.isVisible({ timeout: Constants.TIMEOUTS.WAIT_ELEMENT_INVISIBLE }).catch(() => false)) {
       text = await locator.innerText();
@@ -261,7 +264,7 @@ export class CheckoutPage extends CheckoutLocators {
    * Accepts terms and submits the section to proceed.
    */
   @step('Accept Terms and Continue')
-  async acceptTermsAndContinue(_prefix: string = ''): Promise<void> {
+  async acceptTermsAndContinue( ): Promise<void> {
     await this.chkAgreeTerms.scrollIntoViewIfNeeded();
     await this.chkAgreeTerms.check({ force: true });
     await this.btnSaveCheckout.click();
@@ -272,8 +275,8 @@ export class CheckoutPage extends CheckoutLocators {
    * Clicks the final confirmation button and asserts successful navigation to the success page.
    */
   @step('Confirm Order and Verify Success')
-  async confirmOrderAndVerifySuccess(_prefix: string = ''): Promise<void> {
-    await this.btnConfirmOrder.click(); 
+  async confirmOrderAndVerifySuccess(): Promise<void> {
+    await this.btnConfirmOrder.click();
     await expect(this.page).toHaveURL(/.*checkout\/success/, { timeout: Constants.TIMEOUTS.PAGE_EVENT_LOAD });
   }
 
@@ -298,8 +301,8 @@ export class CheckoutPage extends CheckoutLocators {
    */
   @step('Verify Shipping Validation Errors')
   async verifyShippingValidationErrors(): Promise<void> {
-    await expect(this.divShippingSection.getByText(/First Name must be between/i)).toBeVisible();
-    await expect(this.divShippingSection.getByText(/Last Name must be between/i)).toBeVisible();
+    await expect(this.lblErrorShippingFirstName).toBeVisible();
+    await expect(this.lblErrorShippingLastName).toBeVisible();
   }
 
   /**
@@ -332,5 +335,79 @@ export class CheckoutPage extends CheckoutLocators {
   async verifyShippingSectionHiddenAgain(): Promise<void> {
     await this.chkSameAddress.check({ force: true });
     await expect(this.divShippingNewBlock).toBeHidden();
+  }
+
+  /**
+   * Sets the "Terms and Conditions" checkbox state based on the provided boolean value. 
+   * @param isCheck Determines whether to check or uncheck the terms and conditions checkbox.
+   */
+  @step('Set Terms and Conditions Checkbox')
+  async setTermsAndConditions(isCheck: boolean): Promise<void> {
+    await this.commonPage.scrollTo(this.chkAgreeTerms);
+    const currentlyChecked = await this.chkAgreeTerms.isChecked();
+
+    if (isCheck && !currentlyChecked) {
+      await this.commonPage.click(this.chkAgreeTerms);
+    } else if (!isCheck && currentlyChecked) {
+      await this.commonPage.click(this.chkAgreeTerms);
+    }
+    await this.commonPage.waitForMillis(Constants.TIMEOUTS.BUFFER_STEP_SECONDS * 1000);
+  }
+
+  /**
+   * Asserts that the warning message for unaccepted terms and conditions is displayed, preventing order confirmation.
+   */
+  @step('Verify Terms Warning Message')
+  async verifyTermsWarningMessage(): Promise<void> {
+    await expect(this.alertWarning).toBeVisible({
+      timeout: Constants.TIMEOUTS.WAIT_ELEMENT_VISIBLE
+    });
+  }
+
+  /**
+   * Asserts that the "Same Address" checkbox is selected, confirming the billing and shipping sections are linked.
+   */
+  @step('Verify Same Address Checkbox is Checked')
+  async verifySameAddressIsChecked(): Promise<void> {
+    await expect(this.chkSameAddress).toBeChecked();
+  }
+
+  /** 
+   * Selects a country from the billing country dropdown and triggers the API load for zones.
+   * @param countryName The name of the country to select.
+   */
+  @step('Select Billing Country and trigger API load')
+  async selectBillingCountry(countryName: string): Promise<void> {
+    await this.commonPage.scrollTo(this.ddlBillingCountry);
+    await this.ddlBillingCountry.selectOption({ label: countryName });
+    await this.commonPage.waitForMillis(Constants.TIMEOUTS.PERFORM_LOADING * 1000);
+  }
+
+  /** 
+   * Verifies that the zone dropdown contains a specific state/province.
+   * @param expectedZone The name of the zone to verify.
+   */
+  @step('Verify Zone Dropdown Contains Specific State')
+  async verifyZoneContains(expectedZone: string): Promise<void> {
+    await this.ddlBillingZone.waitFor({ state: 'visible' });
+    const zoneOptionsText = await this.ddlBillingZone.innerText();
+    expect(zoneOptionsText).toContain(expectedZone);
+  }
+
+  /** 
+   * Toggles the "Same Address" checkbox based on the provided boolean value.
+   * @param check Determines whether to check or uncheck the checkbox.
+   */
+  @step('Toggle "Same Address" Checkbox')
+  async toggleSameAddressCheckbox(check: boolean): Promise<void> {
+    await this.commonPage.scrollTo(this.chkSameAddress);
+    const isChecked = await this.chkSameAddress.isChecked();
+    if (check && !isChecked) {
+      await this.commonPage.click(this.chkSameAddress);
+    }
+    else if (!check && isChecked) {
+      await this.commonPage.click(this.chkSameAddress);
+    }
+    await this.commonPage.waitForMillis(Constants.TIMEOUTS.BUFFER_STEP_SECONDS * 1000);
   }
 }

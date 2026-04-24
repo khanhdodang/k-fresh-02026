@@ -55,7 +55,15 @@ export class CheckoutLocators extends CommonLocators {
     valFlatShipping!: Locator;
     valTotal!: Locator;
 
-    locatorInitialization() {
+    alertWarning!: Locator;
+    btnContinueGeneric!: Locator;
+
+    lblErrorBillingFirstName!: Locator;
+    lblErrorBillingLastName!: Locator;
+    lblErrorShippingFirstName!: Locator;
+    lblErrorShippingLastName!: Locator;
+
+    locatorInitialization(): void {
         super.locatorInitialization();
 
         // --- BILLING SECTION ---
@@ -100,5 +108,15 @@ export class CheckoutLocators extends CommonLocators {
         this.valSubTotal = this.page.locator('tr:has-text("Sub-Total:") >> td.text-right').last();
         this.valFlatShipping = this.page.locator('tr:has-text("Flat Shipping Rate:") >> td.text-right').last();
         this.valTotal = this.page.locator('tr:has-text("Total:") >> td.text-right').last();
+
+        this.alertWarning = this.page.getByText(/Warning: You must agree to the Terms/i); this.btnContinueGeneric = this.page.getByRole('button', { name: 'Continue' }).first();
+        this.lblErrorBillingFirstName = this.createErrLocator(this.divPaymentSection, 'First Name');
+        this.lblErrorBillingLastName = this.createErrLocator(this.divPaymentSection, 'Last Name');
+        this.lblErrorShippingFirstName = this.createErrLocator(this.divShippingSection, 'First Name');
+        this.lblErrorShippingLastName = this.createErrLocator(this.divShippingSection, 'Last Name');
+
+    }
+    private createErrLocator(section: Locator, fieldName: string): Locator {
+        return section.getByText(new RegExp(`${fieldName} must be between`, 'i'));
     }
 }
