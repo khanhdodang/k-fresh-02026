@@ -110,7 +110,7 @@ test.describe('Compare Products Tests', () => {
     await commonPage.verifyPageLoaded();
 
     await compareProductsPage.verifyProductsDetails(products.canon.name, products.htcTouch.name);
-    await commonPage.goBack();
+    await commonPage.goBackPage();
     
     await productPage.performActionOnProduct(products.canon, 'Compare');
     await productPage.verifyProductInToast(products.canon.name);

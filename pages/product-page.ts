@@ -19,6 +19,27 @@ export class ProductPage extends ProductLocators {
   }
 
   /**
+   * Increases the product quantity by clicking the increase quantity button a specified number of times
+   * @param product
+   */
+  @step('Increasing the product quantity by a specified number of times')
+  async increaseQuantity(product: Product): Promise<void> {
+    for (let index = 1; index < product.quantity; index++) {
+      await this.btnIncreaseQuantity.click();
+    }
+  }
+
+  /**
+   * Clicks the add to cart button to add the product to the cart
+   */
+  @step('Clicking the add to cart button to add the product to the cart')
+  async clickAddToCart(): Promise<void> {
+    await this.commonPage.roleButtonName('Add to Cart').click();
+  }
+
+  /**
+   * Verifies that the success alert displays the expected message after adding a product to the cart
+   * @param expectedMessage
    * Specifically handles adding a product to the comparison list.
    * @param productName - Name of the product to compare.
    */
@@ -80,6 +101,18 @@ export class ProductPage extends ProductLocators {
    * Scrapes all visible products on the page and converts them into Product objects.
    * Useful for dynamic data-driven testing.
    */
+  @step('Verifying that the success alert displays the expected message after adding a product to the cart')
+  async verifyAddToCartSuccessMessage(expectedMessage: string): Promise<void> {
+    await expect(this.divSuccessAlert).toContainText(expectedMessage);
+  }
+
+  /**
+   * Clicks the view cart link in the success alert to navigate to the cart page
+   */
+  @step('Clicking the view cart link in the success alert to navigate to the cart page')
+  async clickViewCartLink(): Promise<void> {
+    await this.commonPage.roleLinkName('View Cart', false).click();
+  }
   @step('Get all products on the page')
   async getAllProducts(): Promise<Product[]> {
     const products: Product[] = [];

@@ -8,6 +8,11 @@ export class ProductLocators extends CommonLocators {
     this.locatorInitialization();
   }
 
+  btnIncreaseQuantity!: Locator;
+  inputQuantity!: Locator;
+  divSuccessAlert!: Locator;
+
+
   productThumbnail!: Locator;
   productThumb!: Locator;
   compareBtn!: Locator;
@@ -29,6 +34,11 @@ export class ProductLocators extends CommonLocators {
 
   locatorInitialization(): void {
     super.locatorInitialization();
+    this.btnIncreaseQuantity = this.page.locator(
+      '(//button[@aria-label="Increase quantity"])[2]',
+    );
+    this.inputQuantity = this.page.locator('(//input[@name="quantity"])[1]');
+    this.divSuccessAlert = this.page.getByRole('alert');
     this.productThumbnail = this.page.locator('//div[@class="product-thumb"]');
     this.productThumbnaiByName = (productName: string) => this.page.locator(`//h4/a[contains(text(),"${productName}")]/ancestor::div[contains(@class, "product-thumb")]`);
     // this.page.locator(`//h4/a[contains(text(),"${productName}")]/ancestor::div[contains(@class, "product-thumb")]

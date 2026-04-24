@@ -9,7 +9,4 @@ test.describe('Home Tests', () => {
     await loginPage.login(user);
   });
 
-  test('verify abc', async ({  }) => {
-  });
-
 });

@@ -19,6 +19,7 @@ export class Constants {
     PERFORM_LOADING: 2,
   };
 
+
   static readonly WORKERS = Number(process.env.WORKERS ?? 6);
   static readonly LOCAL_WORKERS = Number(process.env.LOCAL_WORKERS ?? 6);
 
@@ -30,14 +31,17 @@ export class Constants {
 
   static readonly ENV = process.env.ENV || 'qa';
   static readonly BASE_URL = process.env.BASE_URL || 'https://ecommerce-playground.lambdatest.io/';
-  static readonly LOGIN_URL = `${Constants.BASE_URL}/index.php?route=account/login`;
+  static readonly LOGIN_URL = `${Constants.BASE_URL}/login`;
+  static readonly REGISTER_URL = `${Constants.BASE_URL}/index.php?route=account/register`;
   static readonly SECURE_URL = `${Constants.BASE_URL}/secure`;
+  static readonly PRODUCT_PAGE_URL = `${Constants.BASE_URL}/index.php?route=product/product&product_id=62&search=macbook+pro`;
+  static readonly LOGIN_USERNAME = process.env.LOGIN_USERNAME || 'tomsmith';
   static readonly SUCCESS_MESSAGE = 'You logged into a secure area!';
-  static readonly LOGIN_USERNAME = process.env.LOGIN_USERNAME || 'test@lambdatest.com';
   static readonly LOGIN_PASSWORD = process.env.LOGIN_PASSWORD || '';
   static readonly USERS_JSON_FILE = './data/users.json';
-  static readonly PRODUCTS_JSON_FILE = './data/products.json';
-  static readonly CATEGORY_URL = `${Constants.BASE_URL}/index.php?route=product/category&path=20`;
+  static readonly PRODUCT_JSON_FILE = './data/product.json';
+    static readonly CATEGORY_URL = `${Constants.BASE_URL}/index.php?route=product/category&path=20`;
+
 }
 
 export const WAIT_SECONDS = {

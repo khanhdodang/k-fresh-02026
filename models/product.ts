@@ -4,6 +4,7 @@ export interface Product {
     weight?: string;
     availability: string;
     description: string;
+    quantity: number;
     price: string;   
     imageUrl: string;
     brand: string;

@@ -1,7 +1,6 @@
 import { Generate } from './gen';
 import { randomInt } from 'node:crypto';
 
-
 /**
  * General-purpose utility helper shared by UI and API tests.
  *
