@@ -8,9 +8,19 @@ export class CompareProductsLocators extends CommonLocators {
     super(page);
     this.locatorInitialization();
   }
-  
+
+  table!: Locator;
+  btnRemove!: Locator;
+  btnAddToCart!: Locator;
+  btnContinue!: Locator;
+  emptyMessage!: Locator;
 
   locatorInitialization(): void {
     super.locatorInitialization();
+    this.table = this.page.locator('//table[contains(@class, "table-bordered")]').first();
+    this.emptyMessage = this.page.locator('//div[@id="content"]//p');
+    this.btnRemove = this.page.locator('//td//button[contains(@onclick, "remove")]');
+    this.btnAddToCart = this.page.locator('//td//button[contains(@onclick, "cart")]');
+    this.btnContinue = this.page.locator("//a[text()='Continue']");
   }
 }

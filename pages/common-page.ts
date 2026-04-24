@@ -2,7 +2,7 @@ import test, { expect, Locator, Page, type Response } from '@playwright/test';
 import { CommonLocators } from '../locators/common-locators';
 import { step } from '../utilities/logging';
 import { Logger } from '../utilities/logger';
-import { Constants } from '../utilities/constants';
+import { Constants, WAIT_SECONDS } from '../utilities/constants';
 import { Utility } from '../utilities/utility';
 
 export class CommonPage extends CommonLocators {
@@ -10,6 +10,26 @@ export class CommonPage extends CommonLocators {
     constructor(page: Page) {
         super(page);
     }
+
+  async closeToast(): Promise<void> {
+    try {
+      const btnCloseToast = this.btnCloseToast;
+      if (await btnCloseToast.isVisible()) {
+        await btnCloseToast.click();
+        await this.waitForToastDisappear();
+      }
+    } catch {
+        console.warn('Close button not found or toast already disappeared');
+     }
+  }
+    async waitForToastDisappear(): Promise<void> {
+    try {
+      await this.toastBody.first().waitFor({ state: 'hidden', timeout: WAIT_SECONDS.TIMEOUT.TOAST });
+    } catch {
+        console.warn('Toast did not disappear within expected time');
+     }
+  }
+
 
     /**
      * Click on Locator
@@ -86,9 +106,9 @@ export class CommonPage extends CommonLocators {
     }
 
     /**
-     * Go to the URL (Hợp nhất 2 hàm goto)
+     * Go to the URL 
      * @param url 
-     * @param isWait mặc định true để đợi 3s sau khi load
+     * @param isWait - Whether to wait for a few seconds after navigation (default: true)
      */
     @step('Go to the URL')
     async goto(url: string, isWait: boolean = true): Promise<void> {
@@ -119,7 +139,7 @@ export class CommonPage extends CommonLocators {
 
     /**
      * Click Item from sidebar menu
-     * Lưu ý: sidebarMenu và locatorByText phải có trong CommonLocators
+     * @param itemName - Name of the item to click in the sidebar menu
      */
     @step('Click Item from sidebar menu')
     async clickSidebarItem(itemName: string): Promise<void> {
@@ -168,4 +188,6 @@ export class CommonPage extends CommonLocators {
             return null;
         }
     }
+
+    
 }

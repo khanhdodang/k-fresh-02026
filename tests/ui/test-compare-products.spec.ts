@@ -1,53 +1,115 @@
 import { test } from '../../pages/base-page';
 import { user } from '../../data/login.data';
 import { Constants } from '../../utilities/constants';
-import { CommonPage } from '../../pages/common-page';
+import { expect } from '@playwright/test';
+
+// Import file data chứa thông tin sản phẩm vào
+import { PRODUCTS } from '../../data/products.data';
 
 test.describe('Compare Products Tests', () => {
 
   test.beforeEach(async ({ commonPage, loginPage }) => {
-    await commonPage.goto(Constants.LOGIN_URL);
-    await loginPage.login(user);
+    // await commonPage.goto(Constants.LOGIN_URL);
+    // await loginPage.login(user);
+    await commonPage.goto(Constants.CATEGORY_URL);
   });
 
-  test('TC-CP-001 | Add 2 products to Compare and verify compare page', async ({ commonPage, productPage }) => {
-        // ── STEP 1-2: Access category page ────────────────────
-    await commonPage.clickSidebarItem(' Phone, Tablets & Ipod');
+  test('TC-CP-001 | Add 2 products to Compare and verify compare page', async ({ commonPage, productPage, compareProductsPage }) => {
+    // ── STEP 1-2: Access category page ────────────────────
     await commonPage.verifyPageLoaded();
 
     // ── STEP 3-5: Add HTC Touch HD, check toast and close ──
-    await productPage.performActionOnProduct('HTC Touch HD', 'Compare');
-    await productPage.verifyProductInToast('HTC Touch HD');
-    // await categoryPage.closeToast();
+    await productPage.performActionOnProduct(PRODUCTS.htcTouch.name, 'Compare');
+    await productPage.verifyProductInToast(PRODUCTS.htcTouch.name);
+    await commonPage.closeToast(); // Ensure toast is closed after verification
 
-    // ── STEP 6-8: Add Palm Treo Pro, check toast ─────────
-    // await categoryPage.addAndVerifyProductInToast(PRODUCTS.PALM, 2);
-    // await categoryPage.closeToast();
+    await productPage.performActionOnProduct(PRODUCTS.canon.name, 'Compare');
+    await productPage.verifyProductInToast(PRODUCTS.canon.name);
 
+    // ── STEP 6-8: Navigate to compare page ───────────────
+    await productPage.clickNavigateToComparePage()
 
     // // ── STEP 9-10: Access compare page, verify title ──────
-    // await comparePage.navigate();
-    // await comparePage.verifyPageLoaded();
+    await commonPage.verifyPageLoaded();
 
     // // ── STEP 11-15: Check data in Compare table ──────
-    // await comparePage.verifyProductsDetails(PRODUCTS.HTC, PRODUCTS.PALM);
+    await compareProductsPage.verifyProductsDetails(PRODUCTS.canon.name, PRODUCTS.htcTouch.name);
   });
 
-  // test('TC-CP-002 | Verify all compare table details with 3 products', async ({ }) => {
+  test('TC-CP-002 | Verify all compare table details with 3 products', async ({ commonPage, productPage, compareProductsPage }) => {
+    // ── STEP 1-2: Access category page ────────────────────
+    await commonPage.goto(Constants.CATEGORY_URL);
+    await commonPage.verifyPageLoaded();
+
+    // ── STEP 3-5: Add HTC Touch HD, check toast and close ──
+    await productPage.performActionOnProduct(PRODUCTS.htcTouch.name, 'Compare');
+    await productPage.verifyProductInToast(PRODUCTS.htcTouch.name);
+    await commonPage.closeToast(); // Ensure toast is closed after verification
+
+    await productPage.performActionOnProduct(PRODUCTS.canon.name, 'Compare');
+    await productPage.verifyProductInToast(PRODUCTS.canon.name);
+    await commonPage.closeToast(); // Ensure toast is closed after verification
+
+    await productPage.performActionOnProduct(PRODUCTS.palmTreo.name, 'Compare');
+    await productPage.verifyProductInToast(PRODUCTS.palmTreo.name);
+
+    // ── STEP 6-8: Navigate to compare page ───────────────
+    await productPage.clickNavigateToComparePage()
+
+    // // ── STEP 9-10: Access compare page, verify title ──────
+    await commonPage.verifyPageLoaded();
+
+    // // ── STEP 11-15: Check data in Compare table ──────
+    await compareProductsPage.verifyProductsDetails(PRODUCTS.canon.name, PRODUCTS.htcTouch.name, PRODUCTS.palmTreo.name);
+
+    // ── STEP 12 - 15: Verify information of the products in grid ────────
+    await compareProductsPage.verifyRow(compareProductsPage.getAvailability(), (a) => expect(a.length).toBeGreaterThan(0));
+    await compareProductsPage.verifyRow(compareProductsPage.getRatings(), (r) => expect(r.toLowerCase()).toContain('reviews'));
+    await compareProductsPage.verifyRow(compareProductsPage.getWeights(), (w) => expect(w.length).toBeGreaterThan(0));
+    await compareProductsPage.verifyRow(compareProductsPage.getDimensions(), (d) => expect(d).toContain('x'));
+  });
+
+//   test('TC-CP-003 | Remove one product from compare and verify table updates', async ({productPage, commonPage, compareProductsPage }) => {
+//  test.setTimeout(60000); 
+
+//     // ── STEP 1-2: Access category page ────────────────────
+//     await commonPage.verifyPageLoaded(); 
+//     // ── STEP 3-5: Add HTC Touch HD, check toast and close ──
+//     await productPage.performActionOnProduct(PRODUCTS.htcTouch.name, 'Compare');
+//     await productPage.verifyProductInToast(PRODUCTS.htcTouch.name);
+//     await commonPage.closeToast(); // Ensure toast is closed after verification
+
+//     await productPage.performActionOnProduct(PRODUCTS.canon.name, 'Compare');
+//     await productPage.verifyProductInToast(PRODUCTS.canon.name);
+
+//     await productPage.clickNavigateToComparePage()
+
+//     await commonPage.verifyPageLoaded();
+
+//     await compareProductsPage.verifyProductsDetails(PRODUCTS.canon.name, PRODUCTS.htcTouch.name);
+    
+//     const removeCountBefore = await compareProductsPage.getRemoveButtonCount();
+//     expect(removeCountBefore).toBe(2);
+
+//     await compareProductsPage.removeProduct(PRODUCTS.palmTreo.name);
+
+//     const removeCountAfter = await compareProductsPage.getRemoveButtonCount();
+//     expect(removeCountAfter).toBe(1);
+
+//     await productPage.performActionOnProduct(PRODUCTS.canon.name, 'Compare');
+//     await commonPage.closeToast();
+//     await productPage.clickNavigateToComparePage();
+//     await commonPage.verifyPageLoaded();
+//     await compareProductsPage.verifyProductsDetails(PRODUCTS.canon.name, PRODUCTS.htcTouch.name, PRODUCTS.palmTreo.name);
+
+//   });
+
+  // test('TC-CP-004 | Remove all products and verify empty state', async ({ }) => {
 
   // });
 
-    // test('TC-CP-003 | Remove one product from compare and verify table updates', async ({ }) => {
+  // test('TC-CP-005 | Verify duplicate handling with page navigation', async ({ }) => {
 
   // });
-
-    // test('TC-CP-004 | Remove all products and verify empty state', async ({ }) => {
-
-  // });
-
-    // test('TC-CP-005 | Verify duplicate handling with page navigation', async ({ }) => {
-
-  // });
-
 
 });

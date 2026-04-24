@@ -49,7 +49,8 @@ export class CommonLocators {
 
     //toast
     toastMessage!: Locator;
-    btnToastClose!: Locator;
+    btnCloseToast!: Locator;
+    toastBody!: Locator;
 
     locatorInitialization(): void {
         this.Iframe1 = this.page.frameLocator(this.iframe1);
@@ -66,12 +67,16 @@ export class CommonLocators {
         this.btnSubmit = this.page.locator('//input[@type="submit"]');
         this.btnConfirmDelete = this.page.locator('button:has-text("Confirm Delete")');
         this.btnCancelDelete = this.page.locator('button:has-text("Cancel Delete")');
+        this.btnCloseToast =this.page.locator("(//div[@id='notification-box-top']//div[contains(@class,'toast')])[1]//button[contains(@class,'close')]").first();
         this.inputSearch = this.page.locator('//input[@placeholder="Search"]');
         this.sidebarMenu = this.page.locator('//a[text()=" Shop by Category"]');
         this.itemTopCategory = this.page.locator('//span[contains(text()," Phone, Tablets & Ipod")]');
         this.toastMessage = this.page.locator('//div[contains(@class,"toast")]//p');
-        this.btnToastClose = this.page.locator('//button[contains(@class,"toast-close-button")]');
+        this.toastBody = this.page.locator('//div[@class="toast-body"]');
+
     }
+
+    
 
     /**
      * Find Locator By Xpath

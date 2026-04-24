@@ -38,7 +38,7 @@ export class Constants {
   static readonly LOGIN_PASSWORD = process.env.LOGIN_PASSWORD || '';
   static readonly USERS_JSON_FILE = './data/users.json';
   static readonly PRODUCTS_JSON_FILE = './data/products.json';
-
+  static readonly CATEGORY_URL = `${Constants.BASE_URL}/index.php?route=product/category&path=20`;
 }
 
 

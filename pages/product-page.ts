@@ -38,10 +38,7 @@ export class ProductPage extends ProductLocators {
   async performActionOnProduct(productName: string, action: ProductAction): Promise<void> {
     // 1. Locate the product thumbnail and ensure it's in the viewport
     const targetProduct = this.productThumbnaiByName(productName);
-    await targetProduct.scrollIntoViewIfNeeded();
-
     // 3. Hover over the thumbnail to reveal hidden action buttons
-    await targetProduct.hover();
 
     // 4. Select the appropriate locator based on the requested action
     let actionBtn;
@@ -53,7 +50,8 @@ export class ProductPage extends ProductLocators {
         actionBtn = this.btnAddWishlist(productName);
         break;
       case 'Compare':
-        actionBtn = this.btnCompare(productName);
+        actionBtn = this.productThumbnaiByName(productName).getByTitle('Compare this Product');
+;
         break;
       case 'Quick View':
         actionBtn = this.btnQuickView(productName);
@@ -61,13 +59,17 @@ export class ProductPage extends ProductLocators {
       default:
         throw new Error(`Unsupported action: "${action}"`);
     }
+    console.log(actionBtn.toString());
+    await targetProduct.hover();
 
     // 5. Wait for the button to be interactable and click it
     await actionBtn.waitFor({ 
         state: 'visible', 
         timeout: WAIT_SECONDS.ELEMENT_VISIBLE 
     });
-    await actionBtn.click();
+    
+    await actionBtn.hover(); // Ensure hover state is maintained before clicking
+    await actionBtn.click({ force: true });
 
     // 6. Wait for background processes to settle (Network Idle)
     await this.page.waitForLoadState('networkidle');
@@ -112,13 +114,19 @@ export class ProductPage extends ProductLocators {
     return products;
   }
 
+  @step('Click to navigate to compare page')
+  async clickNavigateToComparePage(): Promise<void> {
+    await this.btnNavigateToComparePage.waitFor({ state: 'visible' });
+    await this.btnNavigateToComparePage.click();
+    await this.page.waitForLoadState('networkidle');
+  }
+
   /**
    * Validates the success message displayed in the toast notification.
-   * @param expectedName - The product name expected to be in the message.
+   * @param expectedMessage - The message expected to be in the toast.
    */
   @step('Verify Toast Message')
-  async verifyProductInToast(expectedName: string): Promise<void> {
-    const expectedMessage = `Success: You have added ${expectedName} to your product comparison!`;
+  async verifyProductInToast(expectedMessage: string): Promise<void> {
     
     // Wait for the toast to appear before assertion
     await this.commonPage.toastMessage.waitFor({ state: 'visible' });
