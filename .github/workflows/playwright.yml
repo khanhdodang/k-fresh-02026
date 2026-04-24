@@ -12,7 +12,7 @@ on:
         default: 'uat'
         type: choice
         options:
-          - dev
+          - qa
           - staging
           - uat
           - production
@@ -37,8 +37,8 @@ jobs:
       env:
         HEADLESS: true
         CI: true
-        ENV: ${{ github.event.inputs.environment == 'dev' && 'qa' || (github.event.inputs.environment == 'production' && 'prod' || (github.event.inputs.environment || 'uat')) }}
-    - uses: actions/upload-artifact@v4
+        ENV: ${{ github.event.inputs.environment || 'uat' }}
+    - uses: actions/upload-artifact@v5
       if: ${{ !cancelled() }}
       with:
         name: playwright-report
