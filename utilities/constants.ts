@@ -9,7 +9,6 @@ export class Constants {
     process.env.LOGIN_EMAIL || "qwer15102002@yahoo.com.vn";
   static readonly LOGIN_PASSWORD = process.env.LOGIN_PASSWORD || "123456";
   static readonly USERS_JSON_FILE = "./data/users.json";
-  static readonly PRODUCT_NAME = "HTC Touch HD";
   static readonly LOAD_STATE = {
     NETWORK_IDLE: "networkidle",
     DOM_CONTENT_LOADED: "domcontentloaded",

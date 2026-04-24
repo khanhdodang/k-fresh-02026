@@ -26,6 +26,7 @@ export class ProductPage extends ProductLocators {
     });
   }
 
+  @step("Verify compare notification box")
   async expectCompareNotificationBox(): Promise<void> {
     await test.step("Verify compare notification box", async () => {
       await expect(this.boxCompareNotificationTop).toBeVisible();
@@ -44,7 +45,7 @@ export class ProductPage extends ProductLocators {
   @step("Get Product Details")
   async openProductDetail(productName: string): Promise<void> {
     await test.step(`Search product: ${productName}`, async () => {
-      await this.btnSearch.fill(productName);
+      await this.commonPage.fill(this.inputSearch, productName);
       await this.page.keyboard.press("Enter");
       await this.page.waitForLoadState(Constants.LOAD_STATE.NETWORK_IDLE);
     });
@@ -60,15 +61,24 @@ export class ProductPage extends ProductLocators {
       await expect(this.lblProductTitle).toContainText(productName, {
         ignoreCase: true,
       });
+    });
+
+    await test.step("Verify prrice details", async () => {
       // Price should be visible and contain a currency symbol and a valid number format
       await expect(this.lblProductPrice).toBeVisible();
       await expect(this.lblProductPrice).toContainText("$");
       await expect(this.lblProductPrice).toContainText(/\d+\.\d{2}/);
+    });
+
+    await test.step("Verify stock status", async () => {
       // Stock status should be visible
       await expect(this.lblStockStatus).toBeVisible();
       await expect(this.lblStockStatus).toContainText(
         /in stock|out of stock|availability|available|unavailable/i,
       );
+    });
+
+    await test.step("Verify main product image and description", async () => {
       // Main product image should be visible and have a valid src attribute
       await expect(this.imgMainProduct).toBeVisible();
       await expect(this.imgMainProduct).toHaveAttribute(
@@ -77,11 +87,20 @@ export class ProductPage extends ProductLocators {
       );
       const imageSrc = await this.imgMainProduct.getAttribute("src");
       expect(imageSrc).toBeTruthy();
+    });
+
+    await test.step("Verify description details", async () => {
       // Description tab should be visible and contain text
       await expect(this.tabDescription).toBeVisible();
       await this.tabDescription.click();
+    });
+
+    await test.step("Verify description content", async () => {
       await expect(this.divTabContent).toBeVisible();
       await expect(this.divTabContent).toContainText(/\w+/);
+    });
+
+    await test.step("Verify Brand", async () => {
       // Brand link should be visible and contain text
       await expect(this.lnkBrand).toBeVisible();
     });
@@ -102,7 +121,12 @@ export class ProductPage extends ProductLocators {
       expect(initialValue).toMatch(/^\d+$/);
       expect(parseInt(initialValue)).toBeGreaterThan(0);
     });
+  }
 
+  @step("Increment and Decrement Quantity and Verify")
+  async incrementDecrementQuantityAndVerify(
+    productName: string,
+  ): Promise<void> {
     await test.step("Increment quantity and verify", async () => {
       await expect(this.btnIncreaseQuantity).toBeVisible();
       const times = 3;
@@ -111,7 +135,10 @@ export class ProductPage extends ProductLocators {
         await this.page.waitForTimeout(500);
       }
     });
+  }
 
+  @step("Decrement Quantity and Verify")
+  async decrementQuantityAndVerify(productName: string): Promise<void> {
     await test.step("Decrement quantity and verify", async () => {
       await expect(this.btnDecreaseQuantity).toBeVisible();
       const times = 2;
@@ -120,17 +147,23 @@ export class ProductPage extends ProductLocators {
         await this.page.waitForTimeout(500);
       }
     });
+  }
 
+  @step("Verify Final Quantity Value")
+  async verifyFinalQuantityValue(productName: string): Promise<void> {
     await test.step("Verify final quantity value", async () => {
       const finalValue = await this.inputQuantity.inputValue();
       // Final quantity should be initial value + 1 (3 increments - 2 decrements)
       const expectedValue = 1;
       expect(parseInt(finalValue)).toBe(expectedValue);
     });
+  }
 
+  @step("Fill Quantity Input Directly and Verify")
+  async fillQuantityInputDirectlyAndVerify(productName: string): Promise<void> {
     await test.step("Fill quantity input directly and verify", async () => {
       const directValue = "5";
-      await this.inputQuantity.fill(directValue);
+      await this.commonPage.fill(this.inputQuantity, directValue);
       await this.page.waitForTimeout(500);
       const finalValue = await this.inputQuantity.inputValue();
       expect(finalValue).toBe(directValue);
