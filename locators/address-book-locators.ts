@@ -6,7 +6,7 @@ export class AddressBookLocators extends CommonLocators {
 
   constructor(page: Page) {
     super(page);
-    this.locatorsInitialization();
+    this.locatorInitialization();
   }
   
 
