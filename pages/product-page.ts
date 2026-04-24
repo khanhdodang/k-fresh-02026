@@ -41,35 +41,35 @@ export class ProductPage extends ProductLocators {
     // 3. Hover over the thumbnail to reveal hidden action buttons
 
     // 4. Select the appropriate locator based on the requested action
-    let actionBtn;
+    let btnAction;
     switch (action) {
       case 'Add to Cart':
-        actionBtn = this.btnAddCart(productName);
+        btnAction = this.btnAddCart(productName);
         break;
       case 'Wishlist':
-        actionBtn = this.btnAddWishlist(productName);
+        btnAction = this.btnAddWishlist(productName);
         break;
       case 'Compare':
-        actionBtn = this.productThumbnaiByName(productName).getByTitle('Compare this Product');
+        btnAction = this.productThumbnaiByName(productName).getByTitle('Compare this Product');
 ;
         break;
       case 'Quick View':
-        actionBtn = this.btnQuickView(productName);
+        btnAction = this.btnQuickView(productName);
         break;
       default:
         throw new Error(`Unsupported action: "${action}"`);
     }
-    console.log(actionBtn.toString());
+    console.log(btnAction.toString());
     await targetProduct.hover();
 
     // 5. Wait for the button to be interactable and click it
-    await actionBtn.waitFor({ 
+    await btnAction.waitFor({ 
         state: 'visible', 
         timeout: WAIT_SECONDS.ELEMENT_VISIBLE 
     });
     
-    await actionBtn.hover(); // Ensure hover state is maintained before clicking
-    await actionBtn.click({ force: true });
+    await btnAction.hover(); // Ensure hover state is maintained before clicking
+    await btnAction.click({ force: true });
 
     // 6. Wait for background processes to settle (Network Idle)
     await this.page.waitForLoadState('networkidle');
