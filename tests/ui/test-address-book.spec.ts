@@ -4,7 +4,6 @@ import { generateAddressData } from '../../data/address.data';
 
 test.describe('Address Book', () => {
   test.beforeEach(async ({ loginPage }) => {
-    await loginPage.goto();
     await loginPage.login(user);
   });
 
