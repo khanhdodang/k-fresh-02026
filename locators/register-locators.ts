@@ -1,7 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { CommonLocators } from './common-locators';
 
-
 export class RegisterLocators extends CommonLocators {
 
   constructor(page: Page) {

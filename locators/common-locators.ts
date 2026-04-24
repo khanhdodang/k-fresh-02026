@@ -35,7 +35,6 @@ export class CommonLocators {
     Iframe3!: FrameLocator;
     Iframe4!: FrameLocator;
 
-
     iframe1 = 'iframe[name="RadWindow1"]';
     iframe2 = 'iframe[name="RadWindow2"]';
     iframe3 = 'iframe[name="RadWindow3"]';
@@ -242,7 +241,6 @@ export class CommonLocators {
     roleTextboxName(name: string, exact: boolean = true): Locator {
         return this.page.getByRole('textbox', { name, exact });
     }
-
 
     /**
      * Find element by option name
