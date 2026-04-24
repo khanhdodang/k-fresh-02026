@@ -73,10 +73,7 @@ export class CommonLocators {
         this.itemTopCategory = this.page.locator('//span[contains(text()," Phone, Tablets & Ipod")]');
         this.toastMessage = this.page.locator('//div[contains(@class,"toast")]//p');
         this.toastBody = this.page.locator('//div[@class="toast-body"]');
-
     }
-
-    
 
     /**
      * Find Locator By Xpath
@@ -297,5 +294,4 @@ export class CommonLocators {
     locatorIframeIframe(iframe1: string, iframe2: string, element: string): Locator {
         return this.page.frameLocator(iframe1).frameLocator(iframe2).locator(element);
     }
-
 }

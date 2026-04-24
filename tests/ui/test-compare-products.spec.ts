@@ -3,8 +3,7 @@ import { user } from '../../data/login.data';
 import { Constants } from '../../utilities/constants';
 import { expect } from '@playwright/test';
 
-// Import file data chứa thông tin sản phẩm vào
-import { PRODUCTS } from '../../data/products.data';
+import { products, PRODUCTS } from '../../data/products.data';
 
 test.describe('Compare Products Tests', () => {
 
@@ -19,12 +18,12 @@ test.describe('Compare Products Tests', () => {
     await commonPage.verifyPageLoaded();
 
     // ── STEP 3-5: Add HTC Touch HD, check toast and close ──
-    await productPage.performActionOnProduct(PRODUCTS.htcTouch.name, 'Compare');
-    await productPage.verifyProductInToast(PRODUCTS.htcTouch.name);
+    await productPage.performActionOnProduct(products.htcTouch, 'Compare');
+    await productPage.verifyProductInToast(products.htcTouch.name);
     await commonPage.closeToast(); // Ensure toast is closed after verification
 
-    await productPage.performActionOnProduct(PRODUCTS.canon.name, 'Compare');
-    await productPage.verifyProductInToast(PRODUCTS.canon.name);
+    await productPage.performActionOnProduct(products.canon, 'Compare');
+    await productPage.verifyProductInToast(products.canon.name);
 
     // ── STEP 6-8: Navigate to compare page ───────────────
     await productPage.clickNavigateToComparePage()
@@ -33,7 +32,7 @@ test.describe('Compare Products Tests', () => {
     await commonPage.verifyPageLoaded();
 
     // // ── STEP 11-15: Check data in Compare table ──────
-    await compareProductsPage.verifyProductsDetails(PRODUCTS.canon.name, PRODUCTS.htcTouch.name);
+    await compareProductsPage.verifyProductsDetails(products.canon.name, products.htcTouch.name);
   });
 
   test('TC-CP-002 | Verify all compare table details with 3 products', async ({ commonPage, productPage, compareProductsPage }) => {
@@ -42,16 +41,16 @@ test.describe('Compare Products Tests', () => {
     await commonPage.verifyPageLoaded();
 
     // ── STEP 3-5: Add HTC Touch HD, check toast and close ──
-    await productPage.performActionOnProduct(PRODUCTS.htcTouch.name, 'Compare');
-    await productPage.verifyProductInToast(PRODUCTS.htcTouch.name);
+    await productPage.performActionOnProduct(products.htcTouch, 'Compare');
+    await productPage.verifyProductInToast(products.htcTouch.name);
     await commonPage.closeToast(); // Ensure toast is closed after verification
 
-    await productPage.performActionOnProduct(PRODUCTS.canon.name, 'Compare');
-    await productPage.verifyProductInToast(PRODUCTS.canon.name);
+    await productPage.performActionOnProduct(products.canon, 'Compare');
+    await productPage.verifyProductInToast(products.canon.name);
     await commonPage.closeToast(); // Ensure toast is closed after verification
 
-    await productPage.performActionOnProduct(PRODUCTS.palmTreo.name, 'Compare');
-    await productPage.verifyProductInToast(PRODUCTS.palmTreo.name);
+    await productPage.performActionOnProduct(products.palmTreo, 'Compare');
+    await productPage.verifyProductInToast(products.palmTreo.name);
 
     // ── STEP 6-8: Navigate to compare page ───────────────
     await productPage.clickNavigateToComparePage()
@@ -59,57 +58,66 @@ test.describe('Compare Products Tests', () => {
     // // ── STEP 9-10: Access compare page, verify title ──────
     await commonPage.verifyPageLoaded();
 
-    // // ── STEP 11-15: Check data in Compare table ──────
-    await compareProductsPage.verifyProductsDetails(PRODUCTS.canon.name, PRODUCTS.htcTouch.name, PRODUCTS.palmTreo.name);
-
-    // ── STEP 12 - 15: Verify information of the products in grid ────────
+    // // ── STEP 11-15: Verify information of the products in grid ──────
+    await compareProductsPage.verifyProductsDetails(products.canon.name, products.htcTouch.name, products.palmTreo.name);
     await compareProductsPage.verifyRow(compareProductsPage.getAvailability(), (a) => expect(a.length).toBeGreaterThan(0));
     await compareProductsPage.verifyRow(compareProductsPage.getRatings(), (r) => expect(r.toLowerCase()).toContain('reviews'));
     await compareProductsPage.verifyRow(compareProductsPage.getWeights(), (w) => expect(w.length).toBeGreaterThan(0));
     await compareProductsPage.verifyRow(compareProductsPage.getDimensions(), (d) => expect(d).toContain('x'));
   });
 
-//   test('TC-CP-003 | Remove one product from compare and verify table updates', async ({productPage, commonPage, compareProductsPage }) => {
-//  test.setTimeout(60000); 
+  test('TC-CP-003 | Remove one product from compare and verify table updates', async ({productPage, commonPage, compareProductsPage }) => {
+ test.setTimeout(60000); 
 
-//     // ── STEP 1-2: Access category page ────────────────────
-//     await commonPage.verifyPageLoaded(); 
-//     // ── STEP 3-5: Add HTC Touch HD, check toast and close ──
-//     await productPage.performActionOnProduct(PRODUCTS.htcTouch.name, 'Compare');
-//     await productPage.verifyProductInToast(PRODUCTS.htcTouch.name);
-//     await commonPage.closeToast(); // Ensure toast is closed after verification
+    // ── STEP 1-2: Access category page ────────────────────
+    await commonPage.verifyPageLoaded(); 
+    // ── STEP 3-5: Add HTC Touch HD, check toast and close ──
+    await productPage.performActionOnProduct(products.htcTouch, 'Compare');
+    await productPage.verifyProductInToast(products.htcTouch.name);
+    await commonPage.closeToast(); 
 
-//     await productPage.performActionOnProduct(PRODUCTS.canon.name, 'Compare');
-//     await productPage.verifyProductInToast(PRODUCTS.canon.name);
+    await productPage.performActionOnProduct(products.canon, 'Compare');
+    await productPage.verifyProductInToast(products.canon.name);
 
-//     await productPage.clickNavigateToComparePage()
+    await productPage.clickNavigateToComparePage()
+    await commonPage.verifyPageLoaded();
 
-//     await commonPage.verifyPageLoaded();
+    await compareProductsPage.verifyProductsDetails(products.canon.name, products.htcTouch.name);
 
-//     await compareProductsPage.verifyProductsDetails(PRODUCTS.canon.name, PRODUCTS.htcTouch.name);
-    
-//     const removeCountBefore = await compareProductsPage.getRemoveButtonCount();
-//     expect(removeCountBefore).toBe(2);
+    await compareProductsPage.removeProductFromCompare(products.htcTouch.id);
 
-//     await compareProductsPage.removeProduct(PRODUCTS.palmTreo.name);
+    await commonPage.goto(Constants.CATEGORY_URL);
+    await productPage.performActionOnProduct(products.ipod, 'Compare');
+    await productPage.clickNavigateToComparePage()
+    await compareProductsPage.verifyProductsDetails(products.canon.name, products.ipod.name);
 
-//     const removeCountAfter = await compareProductsPage.getRemoveButtonCount();
-//     expect(removeCountAfter).toBe(1);
-
-//     await productPage.performActionOnProduct(PRODUCTS.canon.name, 'Compare');
-//     await commonPage.closeToast();
-//     await productPage.clickNavigateToComparePage();
-//     await commonPage.verifyPageLoaded();
-//     await compareProductsPage.verifyProductsDetails(PRODUCTS.canon.name, PRODUCTS.htcTouch.name, PRODUCTS.palmTreo.name);
-
-//   });
+  });
 
   // test('TC-CP-004 | Remove all products and verify empty state', async ({ }) => {
 
   // });
 
-  // test('TC-CP-005 | Verify duplicate handling with page navigation', async ({ }) => {
+  test('TC-CP-005 | Verify duplicate handling with page navigation', async ({commonPage, compareProductsPage, productPage }) => {
+    // ── STEP 3-5: Add HTC Touch HD, check toast and close ──
+    await productPage.performActionOnProduct(products.htcTouch, 'Compare');
+    await productPage.verifyProductInToast(products.htcTouch.name);
+    await commonPage.closeToast(); // Ensure toast is closed after verification
 
-  // });
+    await productPage.performActionOnProduct(products.canon, 'Compare');
+    await productPage.verifyProductInToast(products.canon.name);
 
+    await productPage.clickNavigateToComparePage()
+    await commonPage.verifyPageLoaded();
+
+    await compareProductsPage.verifyProductsDetails(products.canon.name, products.htcTouch.name);
+    await commonPage.goBack();
+    
+    await productPage.performActionOnProduct(products.canon, 'Compare');
+    await productPage.verifyProductInToast(products.canon.name);
+
+    await productPage.clickNavigateToComparePage()
+    await commonPage.verifyPageLoaded();
+
+    await compareProductsPage.verifyNoDuplicateProducts()
+  });
 });

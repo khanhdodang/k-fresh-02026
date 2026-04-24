@@ -20,13 +20,18 @@ export class CompareProductsPage extends CompareProductsLocators {
    */
   @step('Click Remove Product Button')
   async clickRemoveProductButton(productName: string): Promise<void> {
-    
+    await this.btnRemove(productName).click();
   }
 
-   async getRemoveButtonCount(): Promise<number> { 
-    return this.btnRemove.count(); 
-  }
+  //  async getRemoveButtonCount(): Promise<number> { 
+  //   return this.btnRemove.count(); 
+  // }
   
+  async removeProductFromCompare(productId: string): Promise<void> {
+    await this.clickRemoveProductButton(productId);
+    // verify the product is removed from the compare table by checking the "Remove" button is no longer visible
+    await expect(this.btnRemove(productId)).toBeHidden({ timeout: Constants.TIMEOUTS.DEFAULT});
+  }
 
   /**
    * Clicks the "Add to Cart" button for the specified product.
@@ -72,7 +77,7 @@ export class CompareProductsPage extends CompareProductsLocators {
       .filter(text => text !== rowLabel && text !== '');
   }
 
-    async getPrices(): Promise<string[]> { return this.getRowValuesInternal('Price'); }
+  async getPrices(): Promise<string[]> { return this.getRowValuesInternal('Price'); }
   async getBrands(): Promise<string[]> { return this.getRowValuesInternal('Brand'); }
   async getModels(): Promise<string[]> { return this.getRowValuesInternal('Model'); }
   async getAvailability(): Promise<string[]> { return this.getRowValuesInternal('Availability'); }
@@ -111,32 +116,11 @@ export class CompareProductsPage extends CompareProductsLocators {
       ).toContain(expectedProductName);
     }
   }
+
+  @step('Verify that there are no duplicate products in the comparison table.')
+  async verifyNoDuplicateProducts(): Promise<void> {
+    const productNames = await this.getProductNames();
+    const uniqueProductNames = [...new Set(productNames)];
+    expect(productNames).toEqual(uniqueProductNames);
+  }
 }
-
-// /**
-//    * Verifies that the specified products are successfully added and displayed in the comparison table.
-//    * @param productNames - A rest parameter containing an array of product names to verify.
-//    */
-//   @step('Verify Product Details in Compare Table')
-//   async verifyProductsDetails(...productNames: string[]): Promise<void> {
-//     // 1. Wait for the compare table to be visible to ensure the page has loaded
-//     // OpenCart comparison tables usually have the 'table-bordered' class
-//     const compareTable = this.page.locator('//table[contains(@class, "table-bordered")]').first();
-//     await compareTable.waitFor({ state: 'visible', timeout: 5000 });
-
-//     // 2. Iterate through each product name passed to the function
-//     for (const productName of productNames) {
-//       // 3. Locate the product name inside the table. 
-//       // Using getByRole('link') is highly reliable since product names on this page are clickable links.
-//       const productElement = compareTable.getByRole('link', { name: productName, exact: false });
-
-//       // 4. Assert that the product name is visible in the comparison list
-//       // We use .first() just in case the name appears twice (e.g., in the image title and the text link)
-//       await expect(productElement.first()).toBeVisible({ timeout: 5000 });
-      
-//       // Optional: Log success for debugging
-//       console.log(`Verified product in compare table: ${productName}`);
-//     }
-//   }
-
-

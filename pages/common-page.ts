@@ -11,24 +11,24 @@ export class CommonPage extends CommonLocators {
         super(page);
     }
 
-  async closeToast(): Promise<void> {
-    try {
-      const btnCloseToast = this.btnCloseToast;
-      if (await btnCloseToast.isVisible()) {
-        await btnCloseToast.click();
-        await this.waitForToastDisappear();
-      }
-    } catch {
-        console.warn('Close button not found or toast already disappeared');
-     }
-  }
+    async closeToast(): Promise<void> {
+        try {
+            const btnCloseToast = this.btnCloseToast;
+            if (await btnCloseToast.isVisible()) {
+                await btnCloseToast.click();
+                await this.waitForToastDisappear();
+            }
+        } catch {
+            console.warn('Close button not found or toast already disappeared');
+        }
+    }
     async waitForToastDisappear(): Promise<void> {
-    try {
-      await this.toastBody.first().waitFor({ state: 'hidden', timeout: WAIT_SECONDS.TIMEOUT.TOAST });
-    } catch {
-        console.warn('Toast did not disappear within expected time');
-     }
-  }
+        try {
+            await this.toastBody.first().waitFor({ state: 'hidden', timeout: WAIT_SECONDS.TIMEOUT.TOAST });
+        } catch {
+            console.warn('Toast did not disappear within expected time');
+        }
+    }
 
 
     /**
@@ -137,6 +137,11 @@ export class CommonPage extends CommonLocators {
         await this.goto(url, isWait);
     }
 
+    async goBack(): Promise<void> {
+        await this.page.goBack({ waitUntil: 'domcontentloaded' });
+        await this.page.waitForLoadState('load');
+    }
+
     /**
      * Click Item from sidebar menu
      * @param itemName - Name of the item to click in the sidebar menu
@@ -144,7 +149,7 @@ export class CommonPage extends CommonLocators {
     @step('Click Item from sidebar menu')
     async clickSidebarItem(itemName: string): Promise<void> {
         await test.step(`Click sidebar item: ${itemName}`, async () => {
-            await this.sidebarMenu.click(); 
+            await this.sidebarMenu.click();
             const itemLocator = this.locatorByText(itemName);
             await itemLocator.click();
         });
@@ -188,6 +193,4 @@ export class CommonPage extends CommonLocators {
             return null;
         }
     }
-
-    
 }

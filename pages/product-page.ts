@@ -25,17 +25,18 @@ export class ProductPage extends ProductLocators {
   @step('Click Add to Compare Button')
   async clickAddToCompareButton(productName: string): Promise<void> {
     // Reuse the central action method for consistency
-    await this.performActionOnProduct(productName, 'Compare');
+    await this.performActionOnProduct({ name: productName } as Product, 'Compare');
   }
 
   /**
    * Main orchestrator to perform various actions on a product.
    * Handles scrolling, ID extraction, hovering, and dynamic button selection.
-   * @param productName - Target product name.
+   * @param product - The product object.
    * @param action - Action type to execute.
    */
   @step('Perform action on product')
-  async performActionOnProduct(productName: string, action: ProductAction): Promise<void> {
+  async performActionOnProduct(product: Product, action: ProductAction): Promise<void> {
+    const productName = product.name;
     // 1. Locate the product thumbnail and ensure it's in the viewport
     const targetProduct = this.productThumbnaiByName(productName);
     // 3. Hover over the thumbnail to reveal hidden action buttons
@@ -44,17 +45,17 @@ export class ProductPage extends ProductLocators {
     let btnAction;
     switch (action) {
       case 'Add to Cart':
-        btnAction = this.btnAddCart(productName);
+        btnAction = this.btnAddCart(product.name);
         break;
       case 'Wishlist':
-        btnAction = this.btnAddWishlist(productName);
+        btnAction = this.btnAddWishlist(product.name);
         break;
       case 'Compare':
-        btnAction = this.productThumbnaiByName(productName).getByTitle('Compare this Product');
+        btnAction = targetProduct.getByTitle('Compare this Product');
 ;
         break;
       case 'Quick View':
-        btnAction = this.btnQuickView(productName);
+        btnAction = this.btnQuickView(product.name);
         break;
       default:
         throw new Error(`Unsupported action: "${action}"`);
