@@ -3,9 +3,13 @@ import { CommonPage } from './common-page';
 import { step } from '../utilities/logging';
 import { CartLocators } from '../locators/cart-locators';
 import { Product } from '../models/product';
-import { formatCurrency } from '../utilities/currency';
+
+const formatCurrency = (amount: number | string): string => `$${Number(amount).toFixed(2)}`;
 
 export class CartPage extends CartLocators {
+  verifyCartPageDisplayed() {
+    throw new Error('Method not implemented.');
+  }
 
   commonPage: CommonPage;
 
@@ -19,7 +23,13 @@ export class CartPage extends CartLocators {
    */
   @step('Click Cart Button')
   async clickCartButton(): Promise<void> {
-    await this.btnCart.click();
+    // await this.btnCart.click();
+
+    if (!(await this.miniCartDrawer.isVisible())) {
+      await this.btnCart.click({ force: true });
+    }
+    await expect(this.miniCartDrawer).toBeVisible();
+    await this.btnViewCart.click({force: true});
   }
 
   /**
@@ -28,6 +38,7 @@ export class CartPage extends CartLocators {
   @step('Click Checkout Button')
   async clickCheckoutButton(): Promise<void> {
     await this.commonPage.roleButtonName('Checkout', true).click();
+
   }
 
   /**
@@ -65,14 +76,22 @@ export class CartPage extends CartLocators {
   }
 
   /**
+   * Clicks the view cart link in the success alert to navigate to the cart page
+   */
+  @step('Clicking the view cart link in the success alert to navigate to the cart page')
+  async clickViewCartLink(): Promise<void> {
+    await this.commonPage.roleLinkName('View Cart', false).click();
+  }
+
+  /**
    * Clicks the remove button for a specific product in the cart to remove it
    * @param product
    */
   @step('Clicking the remove button for a specific product in the cart to remove it')
   async clickRemoveProduct(product: Product): Promise<void> {
-    await this.btnRemove(product.name).click();
+    await this.commonPage.click(this.btnRemove(product.name));
   }
-
+  
   /**
    * Removes all products from the cart if any exist
    */
@@ -125,5 +144,6 @@ export class CartPage extends CartLocators {
     await expect(this.cellTotal(product.name)).toContainText(expectedTotal);
     await expect(this.inputQuantity(product.name)).toHaveValue(product.quantity.toString());
   }
-
 }
+
+

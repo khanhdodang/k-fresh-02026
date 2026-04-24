@@ -1,12 +1,17 @@
 import { Locator, Page } from '@playwright/test';
 import { CommonLocators } from './common-locators';
 
-
+/**
+ * Class representing register locators
+ */
 export class RegisterLocators extends CommonLocators {
-
+  /**
+   * Creates an instance of RegisterLocators
+   * @param page
+   */
   constructor(page: Page) {
     super(page);
-    this.locatorInitialization();
+    this.locatorsInitialization();
   }
 
   inputFirstName!: Locator;

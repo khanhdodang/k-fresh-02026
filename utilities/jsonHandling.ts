@@ -1,5 +1,5 @@
-import { readFileSync } from 'fs';
-import path from 'path';
+import { existsSync,readFileSync } from 'node:fs';
+import path from 'node:path';
 
 /**
  * Reads a JSON file from disk and returns the parsed data.
@@ -9,9 +9,15 @@ import path from 'path';
  * @returns Parsed JSON data or the env-specific subset.
  */
 export function readJsonFile<T = unknown>(filePath: string, env?: string): T {
-  const resolvedPath = path.resolve(filePath);
+  const resolvedPath = path.isAbsolute(filePath)
+    ? filePath
+    : existsSync(path.resolve(process.cwd(), filePath))
+      ? path.resolve(process.cwd(), filePath)
+      : path.resolve(__dirname, '..', filePath);
   const rawData = readFileSync(resolvedPath, 'utf8');
   const data = JSON.parse(rawData);
+  console.log('Resolved path:', resolvedPath);
+
 
   if (!env) {
     return data as T;

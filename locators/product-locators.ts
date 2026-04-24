@@ -1,7 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { CommonLocators } from './common-locators';
 
-
 export class ProductLocators extends CommonLocators {
 
   constructor(page: Page) {
@@ -12,7 +11,7 @@ export class ProductLocators extends CommonLocators {
   btnIncreaseQuantity!: Locator;
   inputQuantity!: Locator;
   divSuccessAlert!: Locator;
-
+  lnkViewCart!: Locator;
 
   locatorInitialization(): void {
     super.locatorInitialization();
@@ -21,5 +20,8 @@ export class ProductLocators extends CommonLocators {
     );
     this.inputQuantity = this.page.locator('(//input[@name="quantity"])[1]');
     this.divSuccessAlert = this.page.getByRole('alert');
+    this.lnkViewCart = this.page
+      .getByRole('link', { name: 'View Cart' })
+      .first();
   }
 }

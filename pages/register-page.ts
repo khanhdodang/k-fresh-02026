@@ -43,3 +43,4 @@ export class RegisterPage extends RegisterLocators {
     await this.chkPrivacyPolicy.check();
   }
 }
+

@@ -1,5 +1,6 @@
-export class Constants {
+import process from 'node:process';
 
+export class Constants {
   // Section timeouts
   static readonly TIMEOUTS = {
     DEFAULT: 60000,
@@ -40,3 +41,4 @@ export class Constants {
   static readonly USERS_JSON_FILE = './data/users.json';
   static readonly PRODUCT_JSON_FILE = './data/product.json';
 }
+
