@@ -134,7 +134,6 @@ test.describe('Cart Tests', () => {
     /** Select product card and add to cart */
     await test.step('Select product card and add to cart', async () => {
       await homePage.hoverAndAddToCart(product.name);
-
     });
 
     /** Open cart page */
