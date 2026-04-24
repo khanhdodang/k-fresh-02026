@@ -9,23 +9,31 @@ on:
       environment:
         description: 'Environment to run tests against'
         required: true
-        default: 'uat'
+        default: 'all'
         type: choice
         options:
           - qa
           - staging
           - uat
           - production
+          - all
 
 jobs:
   test:
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        env: ${{ github.event.inputs.environment == 'all'
+          && fromJSON('["qa","staging","uat","production"]')
+          || fromJSON(format('["{0}"]', github.event.inputs.environment || 'uat')) }}
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
     - uses: actions/setup-node@v5
       with:
         node-version: lts/*
+        cache: 'npm'
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright Browsers
@@ -37,7 +45,7 @@ jobs:
       env:
         HEADLESS: true
         CI: true
-        ENV: ${{ github.event.inputs.environment || 'uat' }}
+        ENV: ${{ matrix.env }}
     - uses: actions/upload-artifact@v5
       if: ${{ !cancelled() }}
       with:
