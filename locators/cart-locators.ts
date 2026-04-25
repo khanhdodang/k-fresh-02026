@@ -6,6 +6,7 @@ export class CartLocators extends CommonLocators {
     super(page);
     this.locatorInitialization();
   }
+
   btnCart!: Locator;
   divCartDrawerMessage!: Locator;
   spanCartDrawerTotalLabel!: Locator;
@@ -15,7 +16,6 @@ export class CartLocators extends CommonLocators {
   miniCartDrawer!: Locator;
   btnViewCart!: Locator;
   lnkCheckout!: Locator;
-  btnRemove!: (productName: string) => Locator;
   rowProduct!: (productName: string) => Locator;
   btnUpdate!: (productName: string) => Locator;
   inputQuantity!: (productName: string) => Locator;
@@ -24,7 +24,6 @@ export class CartLocators extends CommonLocators {
   locatorInitialization(): void {
     super.locatorInitialization();
     this.btnCart = this.page.locator('(//div[@class="cart-icon"])[1]');
-    this.btnRemove = (productName: string) => this.page.locator(`(//td/a[text()='${productName}']/../..//button[@title="Remove"])[1]`);
     this.divCartDrawerMessage = this.page.locator(
       '//div[contains(@class,"widget-total")]',
     );
@@ -40,7 +39,6 @@ export class CartLocators extends CommonLocators {
     this.btnRemoveItems = this.page.locator('button[title="Remove"]');
     /** MINI CART DRAWER **/
     this.miniCartDrawer = this.page.locator("//div[@data-position='right' and contains(@class,'mz-pure-drawer')][.//h5[contains(.,'Cart')]]");
-
     /** DROPDOWN CART **/
     this.btnViewCart = this.page.getByRole("link", { name: 'View Cart' });
 
@@ -56,3 +54,4 @@ export class CartLocators extends CommonLocators {
     this.cellTotal = (productName: string) => this.page.locator(`(//td/a[text()='${productName}']/../..//td)[last()]`);
   }
 }
+

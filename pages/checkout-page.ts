@@ -6,7 +6,6 @@ import { Address } from '../models/address';
 import { UserProfile } from '../models/user';
 import { Order } from '../models/order';
 
-
 export class CheckoutPage extends CheckoutLocators {
   static fillBillingDetails(user: UserProfile, arg1: Order) {
     throw new Error('Method not implemented.');

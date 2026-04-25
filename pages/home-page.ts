@@ -51,5 +51,4 @@ export class HomePage extends HomeLocators {
     await addBtn.waitFor({ state: 'visible' });
     await addBtn.click({ force: true });
   }
-
 }

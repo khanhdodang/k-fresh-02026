@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
-import { CommonLocators } from '../locators/common-locators';
+import { CommonLocators } from './common-locators';
+
 
 export class HomeLocators extends CommonLocators {
     constructor(page: Page) {
@@ -48,4 +49,13 @@ export class HomeLocators extends CommonLocators {
         return this.getProductCard(productName)
             .locator('button[title="Add to Cart"]');
     }
+
+  constructor(page: Page) {
+    super(page);
+    this.locatorInitialization();
+  }
+
+  locatorInitialization(): void {
+    super.locatorInitialization();
+  }
 }

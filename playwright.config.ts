@@ -1,18 +1,6 @@
+import './env.loader';
 import { defineConfig, devices } from '@playwright/test';
-import dotenv from 'dotenv';
-import path from 'node:path';
 import { Constants } from './utilities/constants';
-
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-
-const envFile = `.env.${Constants.ENV || 'qa'}`;
-
-console.log(`Loading environment variables from ${envFile}`);
-
-dotenv.config({ path: path.resolve(__dirname, 'profiles', envFile) });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -35,9 +23,10 @@ export default defineConfig({
     // baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
     headless: process.env.HEADLESS ? true : false,
     screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
 
   /* Configure projects for major browsers */
@@ -78,10 +67,4 @@ export default defineConfig({
     // },
   ],
 
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
 });

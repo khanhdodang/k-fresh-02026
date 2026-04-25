@@ -51,7 +51,7 @@ export class ProductPage extends ProductLocators {
   async clickViewCartLink(): Promise<void> {
     await this.commonPage.roleLinkName('View Cart', false).click();
   }
-
+  
   /**
      * Sets the quantity of the product to be added to the cart.
      * @param qty 
@@ -59,5 +59,13 @@ export class ProductPage extends ProductLocators {
   @step('Set product quantity')
   async setQuantity(qty: number): Promise<void> {
     await this.inputQuantity.fill(qty.toString());
+  @step('Search and Navigate to Product Page via UI Navigation')
+  async searchAndSelectProduct(product: Product): Promise<void> {
+    await this.commonPage.fill(this.searchInput.first(), product.name);
+    await this.commonPage.press(this.searchInput.first(), 'Enter');
+    await this.page.waitForLoadState('domcontentloaded');
+    await this.commonPage.waitForVisible(this.firstProductImage);
+    await this.commonPage.click(this.firstProductImage);
+    await this.page.waitForLoadState('domcontentloaded');
   }
 }

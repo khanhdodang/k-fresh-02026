@@ -9,5 +9,4 @@ test.describe('Compare Products Tests', () => {
     await loginPage.login(user);
   });
 
-
 });

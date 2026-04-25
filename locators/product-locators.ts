@@ -12,6 +12,9 @@ export class ProductLocators extends CommonLocators {
   lnkViewCart!: Locator;
   btnIncreaseQuantity!: Locator;
   inputQuantity!: Locator;
+  searchInput!: Locator;
+  firstProductImage!: Locator;
+  btnBuyNow!: Locator;
 
   locatorInitialization(): void {
     super.locatorInitialization();
@@ -28,9 +31,9 @@ export class ProductLocators extends CommonLocators {
     this.lnkViewCart = this.page
       .getByRole('link', { name: 'View Cart' })
       .first();
+    this.searchInput = this.page.locator('//input[@name="search"]');
+    this.firstProductImage = this.page.locator('//div[contains(@class, "product-layout")]//img').first();
+    this.btnBuyNow = this.page.locator('//button[text()="Buy Now"]');
   }
 }
-
-
-
 
