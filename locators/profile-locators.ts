@@ -2,9 +2,6 @@ import { Locator, Page } from '@playwright/test';
 import { CommonLocators } from './common-locators';
 import { DefaultAddressOption } from '../models/user';
 
-/**
- * Locators for account/profile screens.
- */
 export class ProfileLocators extends CommonLocators {
   inputFirstName!: Locator;
   inputLastName!: Locator;
@@ -29,6 +26,7 @@ export class ProfileLocators extends CommonLocators {
 
   constructor(page: Page) {
     super(page);
+    this.locatorInitialization();
   }
 
   locatorInitialization(): void {

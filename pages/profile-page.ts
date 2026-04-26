@@ -1,14 +1,18 @@
 import { expect, Page } from '@playwright/test';
 import { ProfileLocators } from '../locators/profile-locators';
-import { UpdateProfileData, AddressData } from '../models/user';
+import { CommonPage } from './common-page';
+import { UpdateProfileData, AddressData, UserProfile } from '../models/user';
 import { Constants } from '../utilities/constants';
+import { step } from '../utilities/logging';
 
 /**
  * Page object for user profile actions in My Account area.
  */
-export class ProfilesPage extends ProfileLocators {
+export class ProfilePage extends ProfileLocators {
+  commonPage: CommonPage;
   constructor(page: Page) {
     super(page);
+    this.commonPage = new CommonPage(page);
   }
 
   /**
@@ -16,6 +20,29 @@ export class ProfilesPage extends ProfileLocators {
    */
   async openEditAccountPage(): Promise<void> {
     await this.editAccount.click();
+  }
+
+  /**
+   *  Updates the user's profile information with the provided data.
+   * @param profileData 
+   */
+  async updateProfileInformation(profileData: UserProfile): Promise<void> {
+  }
+
+  /**
+   *  Verifies that the user's profile information matches the expected data.
+   * @param expectedProfileData 
+   */
+  async verifyProfileInformation(expectedProfileData: UserProfile): Promise<void> {
+  }
+
+  /**
+   *  Updates the user's configuration settings with the provided data.
+   * @param settingsData 
+   */
+  @step('Update Configuration Settings')
+  async updateConfiguationSettings(settingsData: any): Promise<void> {
+  
   }
 
   /**

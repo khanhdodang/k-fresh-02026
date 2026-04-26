@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';
-import { AddressData, DefaultAddressOption, RegisterData, UpdateProfileData } from '../models/user';
+import { AddressData, DefaultAddressOption, RegisterData, UpdateProfileData, User } from '../models/user';
 import { LoginCredentials } from '../models/user';
 import { Constants } from '../utilities/constants';
+import { ENV } from '../models';
+import { readJsonFile } from '../utilities/jsonHandling';
 const COUNTRY_REGIONS: Record<string, string[]> = {
   'United States': ['California', 'Florida', 'Texas', 'New York'],
   'Canada': ['Ontario', 'Quebec', 'Alberta', 'British Columbia'],
@@ -107,4 +109,8 @@ export function getLoginCredentials(): LoginCredentials {
     email: Constants.LOGIN_EMAIL,
     password: Constants.LOGIN_PASSWORD,
   };
+}
+export function loadUserFromJson(env = Constants.ENV): User {
+  const normalizedEnv = env.toLowerCase() as ENV;
+  return readJsonFile<User>(Constants.USERS_JSON_FILE, normalizedEnv);
 }

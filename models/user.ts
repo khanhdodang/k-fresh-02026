@@ -1,3 +1,7 @@
+export interface User {
+  username: string;
+  password: string;
+}
 export interface UpdateProfileData {
   firstName: string;
   lastName: string;
@@ -44,4 +48,12 @@ export interface RegisterAccountPayload {
   email: string;
   telephone: string;
   password: string;
+}
+
+export interface UserProfile {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  phone: string;
 }
