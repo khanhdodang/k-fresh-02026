@@ -28,6 +28,10 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
+  timeout: Constants.TIMEOUTS.DEFAULT,
+  expect: {
+    timeout: Constants.TIMEOUTS.WAIT_LOCATOR,
+  },
 
   /* Configure projects for major browsers */
   projects: [

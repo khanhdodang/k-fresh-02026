@@ -15,7 +15,7 @@ on:
           - qa
           - staging
           - uat
-          - production
+          - prod
           - all
 
 jobs:
@@ -24,20 +24,34 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env: [qa, staging, uat, production]
+        env: [qa, staging, uat, prod]
+
+        include:
+          - env: qa
+          - env: staging
+          - env: uat
+          - env: prod
+
+    if: |
+      github.event_name != 'workflow_dispatch' ||
+      github.event.inputs.environment == 'all' ||
+      github.event.inputs.environment == matrix.env
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
+
     - uses: actions/setup-node@v5
       with:
         node-version: lts/*
         cache: 'npm'
+
     - name: Install dependencies
       run: npm ci
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+
     - name: Run Playwright tests
-      if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.environment == 'all' || github.event.inputs.environment == matrix.env }}
       run: |
         echo "Running tests against environment: $ENV"
         npx playwright test
@@ -45,9 +59,10 @@ jobs:
         HEADLESS: true
         CI: true
         ENV: ${{ matrix.env }}
-    - uses: actions/upload-artifact@v5
+    - name: Upload Playwright HTML Report
+      uses: actions/upload-artifact@v5
       if: ${{ !cancelled() }}
       with:
-        name: playwright-report
+        name: playwright-report-${{ matrix.env }}
         path: playwright-report/
         retention-days: 30

@@ -12,7 +12,7 @@
     "codegen": "npx playwright codegen https://ecommerce-playground.lambdatest.io/",
     "test:ui": "cross-env ENV=qa npx playwright test --ui",
     "test:debug": "cross-env ENV=qa npx playwright test --debug",
-    "linter": "eslint . --ext .ts tests pages locators utilities data --fix"
+    "linter": "eslint --ext .ts tests pages locators utilities data --fix"
   },
   "keywords": [],
   "author": "",
