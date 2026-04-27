@@ -21,6 +21,4 @@ export class HomePage extends HomeLocators {
   async selectMenu(menuName: string): Promise<void> {
   }
 
-  
-
 }

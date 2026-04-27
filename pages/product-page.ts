@@ -48,4 +48,14 @@ export class ProductPage extends ProductLocators {
   async clickViewCartLink(): Promise<void> {
     await this.commonPage.roleLinkName('View Cart', false).click();
   }
+
+  @step('Search and Navigate to Product Page via UI Navigation')
+  async searchAndSelectProduct(product: Product): Promise<void> {
+    await this.commonPage.fill(this.searchInput.first(), product.name);
+    await this.commonPage.press(this.searchInput.first(), 'Enter');
+    await this.page.waitForLoadState('domcontentloaded');
+    await this.commonPage.waitForVisible(this.firstProductImage);
+    await this.commonPage.click(this.firstProductImage);
+    await this.page.waitForLoadState('domcontentloaded');
+  }
 }
