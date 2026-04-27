@@ -7,7 +7,7 @@ test.describe('Address Book', () => {
     await loginPage.login(user);
   });
 
-  test('TC_01 - Add new address successfully', async ({ addressBookPage }) => {
+  test.only('TC_01 - Add new address successfully', async ({ addressBookPage }) => {
     const addressData = generateAddressData();
     await addressBookPage.goto();
     await addressBookPage.clickNewAddress();
@@ -16,29 +16,29 @@ test.describe('Address Book', () => {
     await addressBookPage.verifySuccess();
   });
 
-  test('TC_02 - Add new address with required fields empty', async ({ addressBookPage }) => {
+  test.only('TC_02 - Add new address with required fields empty', async ({ addressBookPage }) => {
     await addressBookPage.goto();
     await addressBookPage.clickNewAddress();
     await addressBookPage.clickSubmit();
     await addressBookPage.verifyRequiredFieldErrors();
   });
 
-  test('TC_03 - Edit existing address successfully', async ({ addressBookPage }) => {
-    await addressBookPage.goto();
+  test.only('TC_03 - Edit existing address successfully', async ({ addressBookPage }) => {
     const updatedAddressData = generateAddressData();
+    await addressBookPage.goto();
     await addressBookPage.clickEditFirstAddress();
     await addressBookPage.fillAddressForm(updatedAddressData);
     await addressBookPage.clickSubmit();
     await addressBookPage.verifyUpdateSuccess();
   });
 
-  test('TC_04 - Delete existing address successfully', async ({ addressBookPage }) => {
+  test.only('TC_04 - Delete existing address successfully', async ({ addressBookPage }) => {
     await addressBookPage.goto();
     await addressBookPage.clickDeleteLastAddress();
     await addressBookPage.verifyDeleteSuccess();
   });
 
-  test('TC_05 - Delete default address failure', async ({ addressBookPage }) => {
+  test.only('TC_05 - Delete default address failure', async ({ addressBookPage }) => {
     await addressBookPage.goto();
     await addressBookPage.clickDelDefaultAddress();
     await addressBookPage.verifyDeleteFail();

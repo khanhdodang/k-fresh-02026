@@ -6,11 +6,8 @@ export class AddressBookLocators extends CommonLocators {
 
   constructor(page: Page) {
     super(page);
-    this.locatorInitialization();
+    this.locatorsInitialization();
   }
-  
-
-  btnNewAddress!: Locator;
   inputFirstName!: Locator;
   inputLastName!: Locator;
   inputCompany!: Locator;
@@ -18,14 +15,10 @@ export class AddressBookLocators extends CommonLocators {
   inputAddress2!: Locator;
   inputCity!: Locator;
   inputPostCode!: Locator;
-  selectCountry!: Locator;
-  selectRegion!: Locator;
   btnBack!: Locator;
 
   locatorsInitialization(): void {
     super.locatorInitialization();
-    this.btnNewAddress = this.page.locator('//a[contains(text(),"New Address")]');
-
     this.inputFirstName = this.page.locator('//input[@name="firstname"]');
     this.inputLastName = this.page.locator('//input[@name="lastname"]');
     this.inputCompany = this.page.locator('//input[@name="company"]');
@@ -33,9 +26,6 @@ export class AddressBookLocators extends CommonLocators {
     this.inputAddress2 = this.page.locator('//input[@name="address_2"]');
     this.inputCity = this.page.locator('//input[@name="city"]');
     this.inputPostCode = this.page.locator('//input[@name="postcode"]');
-
-    this.selectCountry = this.page.locator('//select[@name="country_id"]');
-    this.selectRegion = this.page.locator('//select[@name="zone_id"]');
   }
   /**
    * Get dropdown option by label
@@ -54,9 +44,9 @@ export class AddressBookLocators extends CommonLocators {
   /**
     * Country and Region option by label
   */
-  countryRegionOption(selectName: 'country_id' | 'zone_id', option: string): Locator {
+  selectCountryRegion(selectName: 'country_id' | 'zone_id'): Locator {
     return this.page.locator(
-      `//select[@name="${selectName}"]/option[normalize-space()="${option}"]`
+      `//select[@name="${selectName}"]`
     );
   }
 
@@ -70,9 +60,9 @@ export class AddressBookLocators extends CommonLocators {
   }
 
   /**
-    * Failue message for required fields
+    * Error message for required fields
   */
-  fieldError(field: string): Locator {
+  lblMessageError(field: string): Locator {
     return this.page.locator(
       `//input[@name="${field}"]/following-sibling::div[contains(@class,"text-danger")]`
     );

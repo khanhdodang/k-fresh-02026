@@ -1,4 +1,4 @@
-import { expect, Locator, Page, test } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
 import { AddressBookLocators } from '../locators/address-book-locators';
 import { Address } from '../models/address';
 import { CommonPage } from './common-page';
@@ -7,12 +7,10 @@ import { Constants } from '../utilities/constants';
 
 export class AddressBookPage extends AddressBookLocators {
   commonPage: CommonPage;
-  btnNewAddress: Locator;
 
   constructor(page: Page) {
     super(page);
     this.commonPage = new CommonPage(page);
-    this.btnNewAddress = this.page.locator('button:has-text("New Address")');
   }
 
   /**
@@ -49,9 +47,9 @@ export class AddressBookPage extends AddressBookLocators {
       await this.inputCity.fill(address.city);
       await this.inputPostCode.fill(address.postCode);
 
-      await this.selectCountry.selectOption({ label: address.country });
-      await expect(this.selectRegion).toBeEnabled();
-      await this.selectRegion.selectOption({ label: address.region });
+      await this.selectCountryRegion('country_id').selectOption({ label: address.country });
+      await expect(this.selectCountryRegion('zone_id')).toBeEnabled();
+      await this.selectCountryRegion('zone_id').selectOption({ label: address.region });
     });
   }
 
@@ -92,19 +90,19 @@ export class AddressBookPage extends AddressBookLocators {
  */
   @step('Verify required field validation messages')
   async verifyRequiredFieldErrors(): Promise<void> {
-    await expect(this.fieldError('firstname')).toHaveText(
+    await expect(this.lblMessageError('firstname')).toHaveText(
       'First Name must be between 1 and 32 characters!'
     );
 
-    await expect(this.fieldError('lastname')).toHaveText(
+    await expect(this.lblMessageError('lastname')).toHaveText(
       'Last Name must be between 1 and 32 characters!'
     );
 
-    await expect(this.fieldError('address_1')).toHaveText(
+    await expect(this.lblMessageError('address_1')).toHaveText(
       'Address must be between 3 and 128 characters!'
     );
 
-    await expect(this.fieldError('city')).toHaveText(
+    await expect(this.lblMessageError('city')).toHaveText(
       'City must be between 2 and 128 characters!'
     );
 
