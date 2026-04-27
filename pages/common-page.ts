@@ -363,8 +363,6 @@ export class CommonPage extends CommonLocators {
         await this.page.close();
     }
 
-   
-
     /**
      * Reload page
      */

@@ -1,16 +1,18 @@
-import { expect, Page, test } from '@playwright/test';
-import { AddressLocators } from '../locators/address-book-locators';
+import { expect, Locator, Page, test } from '@playwright/test';
+import { AddressBookLocators } from '../locators/address-book-locators';
 import { Address } from '../models/address';
 import { CommonPage } from './common-page';
 import { step } from '../utilities/logging';
 import { Constants } from '../utilities/constants';
 
-export class AddressBookPage extends AddressLocators {
+export class AddressBookPage extends AddressBookLocators {
   commonPage: CommonPage;
+  btnNewAddress: Locator;
 
   constructor(page: Page) {
     super(page);
     this.commonPage = new CommonPage(page);
+    this.btnNewAddress = this.page.locator('button:has-text("New Address")');
   }
 
   /**
@@ -19,7 +21,7 @@ export class AddressBookPage extends AddressLocators {
   @step('Navigating to Address Book page')
   async goto(): Promise<void> {
     await test.step('Navigating to Address Book page', async () => {
-      await this.page.goto(Constants.ADDRESS_BOOK_URL);
+      await this.commonPage.goto(Constants.ADDRESS_BOOK_URL);
     });
   }
 
@@ -29,7 +31,7 @@ export class AddressBookPage extends AddressLocators {
   @step('Clicking New Address button')
   async clickNewAddress(): Promise<void> {
     await test.step('Clicking New Address button', async () => {
-      await this.btnNewAddress.click();
+      await this.commonPage.btnAddNew.click();
     });
   }
 
@@ -59,7 +61,7 @@ export class AddressBookPage extends AddressLocators {
   @step('Leaving all fields blank and submitting the form')
   async submitEmptyAddressForm(): Promise<void> {
     await test.step('Leaving all fields blank and submitting the form', async () => {
-      await this.btnContinue.click();
+      await this.commonPage.btnSubmit.click();
     });
   }
 
@@ -67,9 +69,9 @@ export class AddressBookPage extends AddressLocators {
    * Submit address form
    */
   @step('Submitting address form')
-  async submit(): Promise<void> {
+  async clickSubmit(): Promise<void> {
     await test.step('Submitting address form', async () => {
-      await this.btnContinue.click();
+      await this.commonPage.btnSubmit.click();
     });
   }
 
@@ -79,11 +81,12 @@ export class AddressBookPage extends AddressLocators {
   @step('Verifying address added successfully')
   async verifySuccess(): Promise<void> {
     await test.step('Verifying address added successfully', async () => {
-      await expect(this.successMessage).toContainText(
+      await expect(this.lblMessage('success')).toContainText(
         'Your address has been successfully added'
       );
     });
   }
+  
   /**
  * Verify failure message
  */
@@ -126,7 +129,7 @@ export class AddressBookPage extends AddressLocators {
   @step('Verifying address updated successfully')
   async verifyUpdateSuccess(): Promise<void> {
     await test.step('Verifying address updated successfully', async () => {
-      await expect(this.successMessage).toContainText(
+      await expect(this.lblMessage('success')).toContainText(
         'Your address has been successfully updated'
       );
     })
@@ -138,9 +141,9 @@ export class AddressBookPage extends AddressLocators {
   @step('Click Delete button of the last address')
   async clickDeleteLastAddress(): Promise<void> {
     await test.step('Click Delete button of the last address', async () => {
-      const total = await this.btnDelete.count();
+      const total = await this.actionButton('delete').count();
 
-      await this.btnDelete.nth(total - 1).click();
+      await this.actionButton('delete').nth(total - 1).click();
     });
   }
   /**
@@ -148,8 +151,8 @@ export class AddressBookPage extends AddressLocators {
 */
   @step('Click Delete button of the default address')
   async clickDelDefaultAddress(): Promise<void> {
-    await test.step('Click Delete button of the last address', async () => {
-      await this.btnDelete.first().click();
+    await test.step('Click Delete button of the first address', async () => {
+      await this.actionButton('delete').first().click();
     });
   }
 
@@ -159,7 +162,7 @@ export class AddressBookPage extends AddressLocators {
   @step('Verifying address deleted successfully')
   async verifyDeleteSuccess(): Promise<void> {
     await test.step('Verifying address deleted successfully', async () => {
-      await expect(this.successMessage).toContainText(
+      await expect(this.lblMessage('success')).toContainText(
         'Your address has been successfully deleted'
       );
     })
@@ -170,10 +173,8 @@ export class AddressBookPage extends AddressLocators {
    */
   @step('Verifying default address cannot be deleted')
   async verifyDeleteFail(): Promise<void> {
-    await expect(this.failureMessage).toContainText(
+    await expect(this.lblMessage('warning')).toContainText(
       'Warning: You can not delete your default address!'
     );
   }
-
-
 }

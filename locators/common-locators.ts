@@ -50,9 +50,9 @@ export class CommonLocators {
 
         this.btnSave = this.page.locator('button:has-text("Save")');
         this.btnCancel = this.page.locator('button:has-text("Cancel")');
-        this.btnEdit = this.page.locator('button:has-text("Edit")');
-        this.btnDelete = this.page.locator('button:has-text("Delete")');
-        this.btnAddNew = this.page.locator('button:has-text("Add New")');
+        this.btnEdit = this.page.locator('//a[text()="Edit"]');
+        this.btnDelete = this.page.locator('//a[text()="Delete"]');
+        this.btnAddNew = this.page.locator('//a[text()="New Address"]');
         this.btnSubmit = this.page.locator('//input[@type="submit"]');
         this.btnConfirmDelete = this.page.locator('button:has-text("Confirm Delete")');
         this.btnCancelDelete = this.page.locator('button:has-text("Cancel Delete")');

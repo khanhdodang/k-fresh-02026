@@ -4,6 +4,7 @@ import { generateAddressData } from '../../data/address.data';
 
 test.describe('Address Book', () => {
   test.beforeEach(async ({ loginPage }) => {
+    await loginPage.goto();
     await loginPage.login(user);
   });
 
@@ -12,38 +13,35 @@ test.describe('Address Book', () => {
     await addressBookPage.goto();
     await addressBookPage.clickNewAddress();
     await addressBookPage.fillAddressForm(addressData);
-    await addressBookPage.submit();
+    await addressBookPage.clickSubmit();
     await addressBookPage.verifySuccess();
   });
 
   test('TC_02 - Add new address with required fields empty', async ({ addressBookPage }) => {
     await addressBookPage.goto();
     await addressBookPage.clickNewAddress();
-    await addressBookPage.submit();
+    await addressBookPage.clickSubmit();
     await addressBookPage.verifyRequiredFieldErrors();
   });
 
   test('TC_03 - Edit existing address successfully', async ({ addressBookPage }) => {
-  const updatedAddressData = generateAddressData();
-  await addressBookPage.goto();
-  await addressBookPage.clickEditFirstAddress();
-  await addressBookPage.fillAddressForm(updatedAddressData);
-  await addressBookPage.submit();
-  await addressBookPage.verifyUpdateSuccess();
+    await addressBookPage.goto();
+    const updatedAddressData = generateAddressData();
+    await addressBookPage.clickEditFirstAddress();
+    await addressBookPage.fillAddressForm(updatedAddressData);
+    await addressBookPage.clickSubmit();
+    await addressBookPage.verifyUpdateSuccess();
   });
 
   test('TC_04 - Delete existing address successfully', async ({ addressBookPage }) => {
-  await addressBookPage.goto();
-  await addressBookPage.clickDeleteLastAddress();
-  await addressBookPage.verifyDeleteSuccess();
+    await addressBookPage.goto();
+    await addressBookPage.clickDeleteLastAddress();
+    await addressBookPage.verifyDeleteSuccess();
   });
 
   test('TC_05 - Delete default address failure', async ({ addressBookPage }) => {
-  await addressBookPage.goto();
-  await addressBookPage.clickDelDefaultAddress();
-  await addressBookPage.verifyDeleteFail();
+    await addressBookPage.goto();
+    await addressBookPage.clickDelDefaultAddress();
+    await addressBookPage.verifyDeleteFail();
   });
-
-  
-
 });
