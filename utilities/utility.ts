@@ -319,7 +319,6 @@ export class Utility {
         return true;
     }
 
-
     /**
      * Compare Arrays by Exact Order
      * @param arr1
@@ -701,7 +700,6 @@ export class Utility {
         }
         return -1;
     }
-
 
     /**
      * Mapping keys values 2D Array

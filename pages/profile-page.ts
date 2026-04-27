@@ -5,7 +5,6 @@ import { step } from '../utilities/logging';
 import { ProfileLocators } from '../locators/profile-locators';
 import { UserProfile } from '../models/user';
 
-
 export class ProfilePage extends ProfileLocators {
 
   commonPage: CommonPage;

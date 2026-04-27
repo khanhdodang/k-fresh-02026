@@ -11,6 +11,10 @@ export class ProductLocators extends CommonLocators {
   btnIncreaseQuantity!: Locator;
   inputQuantity!: Locator;
   divSuccessAlert!: Locator;
+  searchInput!: Locator;
+  firstProductImage!: Locator;
+  btnBuyNow!: Locator;
+
   productThumbnail!: Locator;
   productThumb!: Locator;
   compareBtn!: Locator;

@@ -22,4 +22,5 @@ export class HomePage extends HomeLocators {
     await this.shopByCategoryMenu.click()
     await this.itemTopCategory(menuName).click()
   }
+
 }

@@ -19,7 +19,6 @@ export class Constants {
     PERFORM_LOADING: 2,
   };
 
-
   static readonly WORKERS = Number(process.env.WORKERS ?? 6);
   static readonly LOCAL_WORKERS = Number(process.env.LOCAL_WORKERS ?? 6);
 
@@ -42,6 +41,8 @@ export class Constants {
   static readonly LOGIN_PASSWORD = process.env.LOGIN_PASSWORD || '';
   static readonly USERS_JSON_FILE = './data/users.json';
   static readonly PRODUCT_JSON_FILE = './data/product.json';
+    static readonly CATEGORY_URL = `${Constants.BASE_URL}/index.php?route=product/category&path=20`;
+
 }
 
 export const WAIT_SECONDS = {

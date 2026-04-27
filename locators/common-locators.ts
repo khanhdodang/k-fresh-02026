@@ -239,7 +239,6 @@ export class CommonLocators {
         return this.page.getByRole('textbox', { name, exact });
     }
 
-
     /**
      * Find element by option name
      * @param name
