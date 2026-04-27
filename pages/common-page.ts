@@ -4,7 +4,6 @@ import { step } from '../utilities/logging';
 import { Logger } from '../utilities/logger';
 import { Constants } from '../utilities/constants';
 import { Utility } from '../utilities/utility';
-
 export class CommonPage extends CommonLocators {
 
     constructor(page: Page) {
@@ -430,8 +429,9 @@ export class CommonPage extends CommonLocators {
     async dialogAccept(): Promise<void> {
         try {
             this.page.on('dialog', async dialog => await dialog.accept());
-        } catch (ex: any) {
-            Logger.log('dialogAccept', ex.message);
+        } catch (ex: unknown) {
+            const message = ex instanceof Error ? ex.message : String(ex);
+            Logger.log('dialogAccept', message);
         }
     }
 
@@ -593,7 +593,7 @@ export class CommonPage extends CommonLocators {
                     return ''; // or any default value like 'transparent'
                 }
 
-                let style: any;
+                let style: CSSStyleDeclaration;
                 if (pseudoElement && pseudoElement !== '') {
                     style = window.getComputedStyle(element, pseudoElement);
                 }
@@ -756,7 +756,7 @@ export class CommonPage extends CommonLocators {
         method: string = 'GET',
         expectedStatus: number = 200,
         timeout: number = Constants.TIMEOUTS.DEFAULT
-    ): Promise<{ response: Response; body: any } | null> {
+    ): Promise<{ response: Response; body: unknown } | null> {
         try {
             const response = await this.page.waitForResponse(
                 res =>
