@@ -19,6 +19,8 @@ export class HomePage extends HomeLocators {
    */
   @step('Select Menu')
   async selectMenu(menuName: string): Promise<void> {
+    await this.shopByCategoryMenu.click()
+    await this.itemTopCategory(menuName).click()
   }
 
 }

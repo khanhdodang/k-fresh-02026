@@ -16,12 +16,14 @@ export class CommonLocators {
         return this.page;
     }
 
+    //buttons
     btnSave!: Locator;
     btnCancel!: Locator;
     btnEdit!: Locator;
     btnDelete!: Locator;
     btnAddNew!: Locator;
     btnSubmit!: Locator;
+    btnContinue!: Locator;
     btnConfirmDelete!: Locator;
     btnCancelDelete!: Locator;
     inputSearch!: Locator;
@@ -39,18 +41,25 @@ export class CommonLocators {
     iframe3 = 'iframe[name="RadWindow3"]';
     iframe4 = 'iframe[name="RadWindow4"]';
 
-    locatorInitialization(): void {
-        this.Iframe1 = this.page.frameLocator(this.iframe1);
-        this.Iframe2 = this.page.frameLocator(this.iframe2);
-        this.Iframe3 = this.page.frameLocator(this.iframe3);
-        this.Iframe4 = this.page.frameLocator(this.iframe4);
+    shopByCategoryMenu!: Locator;
 
+    //top category item
+    itemTopCategory!: (itemName: string) => Locator;
+
+    //toast
+    toastMessage!: (productName: string) => Locator;
+    // btnCloseToast!: Locator;
+    btnCloseToast!: (name: string) => Locator;
+    toastBody!: Locator;
+
+    locatorInitialization(): void {
         this.btnSave = this.page.locator('button:has-text("Save")');
         this.btnCancel = this.page.locator('button:has-text("Cancel")');
         this.btnEdit = this.page.locator('button:has-text("Edit")');
         this.btnDelete = this.page.locator('button:has-text("Delete")');
         this.btnAddNew = this.page.locator('button:has-text("Add New")');
-        this.btnSubmit = this.page.locator('button[type="submit"]');
+        this.btnSubmit = this.page.locator('//input[@type="submit"]');
+        this.btnContinue = this.page.locator('//a[contains(@class, "btn") and contains(., "Continue")] | //input[@value="Continue"]');
         this.btnConfirmDelete = this.page.locator('button:has-text("Confirm Delete")');
         this.btnCancelDelete = this.page.locator('button:has-text("Cancel Delete")');
         this.inputSearch = this.page.locator('input[placeholder="Search"]');
@@ -65,6 +74,22 @@ export class CommonLocators {
             return this.page.locator(`xpath=//ul/li[text()="${optionName}"]`);
         };
 
+        this.btnCloseToast = (name: string): Locator => {
+            // Sử dụng dấu backtick (phím cạnh số 1) để nội suy biến ${name}
+            return this.page.locator(`//div[contains(@class,"toast")]//p//a[contains(text(),"${name}")]/ancestor::div//span[text()="×"]`);
+        }
+        this.inputSearch = this.page.locator('//input[@placeholder="Search"]');
+        this.shopByCategoryMenu = this.page.locator('//a[text()=" Shop by Category"]');
+        this.itemTopCategory = (itemName: string): Locator => {
+            // Sửa dấu nháy đơn thành dấu backtick để nội suy biến itemName
+            return this.page.locator(`//span[contains(text(),"${itemName}")]`);
+        }
+        this.toastMessage = (productName: string): Locator => {
+            // 1. Dùng dấu backtick `
+            // 2. Gọi đúng tên biến là ${productName}
+            return this.page.locator(`//div[contains(@class,"toast")]//p//a[contains(text(),"${productName}")]`);
+        }
+        this.toastBody = this.page.locator('//div[@class="toast-body"]');
     }
 
     /**
@@ -285,5 +310,4 @@ export class CommonLocators {
     locatorIframeIframe(iframe1: string, iframe2: string, element: string): Locator {
         return this.page.frameLocator(iframe1).frameLocator(iframe2).locator(element);
     }
-
 }

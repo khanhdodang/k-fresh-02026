@@ -786,4 +786,8 @@ export class Utility {
                 .join('-'))
             .join(' ');
     }
+
+    static countOccurrences(arr: string[], target: string): number {
+        return arr.filter((item) => item === target).length;
+    }
 }
