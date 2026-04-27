@@ -1,17 +1,20 @@
-import test, { expect, Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { Constants } from '../utilities/constants';
 import { CommonPage } from './common-page';
 import { step } from '../utilities/logging';
 import { CompareProductsLocators } from '../locators/compare-products-locators';
 import { Product } from '../models/product';
+import { ProductPage } from './product-page';
 
 export class CompareProductsPage extends CompareProductsLocators {
 
   commonPage: CommonPage;
+  productPage: ProductPage
 
   constructor(page: Page) {
     super(page);
     this.commonPage = new CommonPage(page);
+    this.productPage = new ProductPage(page);
   }
 
   /**
@@ -22,16 +25,30 @@ export class CompareProductsPage extends CompareProductsLocators {
   async clickRemoveProductButton(productName: string): Promise<void> {
     await this.btnRemove(productName).click();
   }
-
-  //  async getRemoveButtonCount(): Promise<number> { 
-  //   return this.btnRemove.count(); 
-  // }
   
   async removeProductFromCompare(productId: string): Promise<void> {
     await this.clickRemoveProductButton(productId);
     // verify the product is removed from the compare table by checking the "Remove" button is no longer visible
     await expect(this.btnRemove(productId)).toBeHidden({ timeout: Constants.TIMEOUTS.DEFAULT});
   }
+
+/**
+ * Remove one or multiple products from the compare table
+ * @param productIds List of product IDs to be removed
+ */
+@step('Remove products from compare table')
+async removeProductsFromCompare(...products: Product[]): Promise<void> {
+    for (const product of products) {
+        // Click the remove button for the specific product ID
+        await this.clickRemoveProductButton(product.id);
+        
+        // Verify the product is removed before moving to the next one
+        // This ensures the table has updated and the DOM is stable
+        await expect(this.btnRemove(product.id)).toBeHidden({ 
+            timeout: Constants.TIMEOUTS.DEFAULT 
+        });
+    }
+}
 
   /**
    * Clicks the "Add to Cart" button for the specified product.
@@ -46,6 +63,7 @@ export class CompareProductsPage extends CompareProductsLocators {
    */
   @step('Click Continue Button')
   async clickContinueButton(): Promise<void> {
+    await this.btnContinue.click()
   }
 
   /**
@@ -64,6 +82,10 @@ export class CompareProductsPage extends CompareProductsLocators {
   @step('Get Product Names')
   async getProductNames(): Promise<string[]> {
     return this.getRowValuesInternal('Product'); 
+  }
+
+    async getEmptyMessage(): Promise<string> { 
+    return (await this.emptyMessage.textContent())?.trim() ?? ''; 
   }
 
     private async getRowValuesInternal(rowLabel: string): Promise<string[]> {
@@ -99,28 +121,53 @@ export class CompareProductsPage extends CompareProductsLocators {
   }
 
   /**
-   * Verifies that the specified products are successfully added and displayed in the comparison table.
-   * @param productNames - A rest parameter containing an array of product names to verify.
+   * Verify that the specified products are successfully added and displayed in the comparison table.
+   * @param expectedProducts - An array of Product objects instead of a string.
    */
   @step('Verify Product Details in Compare Table')
-  async verifyProductsDetails(...productNames: string[]): Promise<void> {
-    // 1. Reuse the existing function to retrieve the entire list of product names on the UI.
+  async verifyProductsDetails(...expectedProducts: Product[]): Promise<void> {
+    // Get a list of existing product names on the UI.
     const actualProductNamesOnUI = await this.getProductNames();
 
-    // 2. Loop through the list of expected product names and assert
-    for (const expectedProductName of productNames) {
-      // Use expect().toContain() of Playwright to check if an element is in the array
+    // Iterate through the list of expected Product objects.
+    for (const product of expectedProducts) {
       expect(
         actualProductNamesOnUI, 
-        `Expected product "${expectedProductName}" to be in the compare table`
-      ).toContain(expectedProductName);
+        `Expected product "${product.name}" to be in the compare table`
+      ).toContain(product.name);
     }
   }
 
+/**
+ * 
+ * @param expectedProducts : The product needs verification.
+ */
+@step('Verify navigation and products on Compare Page')
+async verifyComparePageDisplaysCorrectProducts( ...expectedProducts: Product[]): Promise<void> {
+    const targetName = expectedProducts[0].name;
+    await this.productPage.clickNavigateToComparePage(targetName);
+    await this.commonPage.verifyPageLoaded();
+    await this.verifyProductsDetails(...expectedProducts);
+}  
+
+/**
+ * Methods to check for duplicate products in the comparison table.
+ */
   @step('Verify that there are no duplicate products in the comparison table.')
   async verifyNoDuplicateProducts(): Promise<void> {
     const productNames = await this.getProductNames();
     const uniqueProductNames = [...new Set(productNames)];
     expect(productNames).toEqual(uniqueProductNames);
+  }
+
+  /**
+   * Verify that there are no products listed on the comparison page.
+   * @param expectMessage: The message indicates the comparison table is empty.
+   */
+  @step('Verify that there are no products listed on the comparison page')
+  async verifyNoProductOnComparionPage(expectMessage: string): Promise<void>{
+    const emptyMsgFinal = await this.getEmptyMessage();
+    expect(emptyMsgFinal).toContain(expectMessage);
+    expect(this.table).toBeHidden()
   }
 }

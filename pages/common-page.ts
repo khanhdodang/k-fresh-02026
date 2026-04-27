@@ -11,17 +11,14 @@ export class CommonPage extends CommonLocators {
         super(page);
     }
 
-    async closeToast(): Promise<void> {
-        try {
-            const btnCloseToast = this.btnCloseToast;
-            if (await btnCloseToast.isVisible()) {
-                await btnCloseToast.click();
-                await this.waitForToastDisappear();
-            }
-        } catch {
-            console.warn('Close button not found or toast already disappeared');
-        }
+async closeToast(name: string): Promise<void> {
+    try {
+        await this.btnCloseToast(name).click({ timeout: 3000 });
+        await this.waitForToastDisappear();
+    } catch {
+        console.warn(`Toast "${name}" did not appear or close button is missing.`);
     }
+}
     async waitForToastDisappear(): Promise<void> {
         try {
             await this.toastBody.first().waitFor({ state: 'hidden', timeout: WAIT_SECONDS.TIMEOUT.TOAST });
@@ -30,26 +27,10 @@ export class CommonPage extends CommonLocators {
         }
     }
 
-
-    async closeToast(): Promise<void> {
-        try {
-            const btnCloseToast = this.btnCloseToast;
-            if (await btnCloseToast.isVisible()) {
-                await btnCloseToast.click();
-                await this.waitForToastDisappear();
-            }
-        } catch {
-            console.warn('Close button not found or toast already disappeared');
-        }
-    }
-    async waitForToastDisappear(): Promise<void> {
-        try {
-            await this.toastBody.first().waitFor({ state: 'hidden', timeout: WAIT_SECONDS.TIMEOUT.TOAST });
-        } catch {
-            console.warn('Toast did not disappear within expected time');
-        }
-    }
-
+    async clickContinue(): Promise<void> {
+    await this.btnContinue.click();
+    await this.page.waitForLoadState('domcontentloaded');
+  }
 
     /**
      * Click on Locator
@@ -813,11 +794,12 @@ export class CommonPage extends CommonLocators {
             return null;
         }
     }
-    
+
     @step('Verify page loaded by checking title')
     async verifyPageLoaded(expectedTitle?: string): Promise<void> {
         await test.step('Verify page loaded by checking title', async () => {
             const title = await this.page.title();
+            console.log('Title:'+title)
             if (expectedTitle) {
                 expect(title).toBe(expectedTitle);
             } else {

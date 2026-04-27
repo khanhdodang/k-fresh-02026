@@ -58,11 +58,10 @@ export class ProductPage extends ProductLocators {
   @step('Perform action on product')
   async performActionOnProduct(product: Product, action: ProductAction): Promise<void> {
     const productName = product.name;
-    // 1. Locate the product thumbnail and ensure it's in the viewport
+    // Locate the product thumbnail and ensure it's in the viewport
     const targetProduct = this.productThumbnaiByName(productName);
-    // 3. Hover over the thumbnail to reveal hidden action buttons
 
-    // 4. Select the appropriate locator based on the requested action
+    // Select the appropriate locator based on the requested action
     let btnAction;
     switch (action) {
       case 'Add to Cart':
@@ -73,7 +72,7 @@ export class ProductPage extends ProductLocators {
         break;
       case 'Compare':
         btnAction = targetProduct.getByTitle('Compare this Product');
-;
+        ;
         break;
       case 'Quick View':
         btnAction = this.btnQuickView(product.name);
@@ -84,17 +83,30 @@ export class ProductPage extends ProductLocators {
     console.log(btnAction.toString());
     await targetProduct.hover();
 
-    // 5. Wait for the button to be interactable and click it
-    await btnAction.waitFor({ 
-        state: 'visible', 
-        timeout: WAIT_SECONDS.ELEMENT_VISIBLE 
+    // Wait for the button to be interactable and click it
+    await btnAction.waitFor({
+      state: 'visible',
+      timeout: WAIT_SECONDS.ELEMENT_VISIBLE
     });
-    
-    await btnAction.hover(); // Ensure hover state is maintained before clicking
+
+    await btnAction.hover();
     await btnAction.click({ force: true });
 
-    // 6. Wait for background processes to settle (Network Idle)
+    // Wait for background processes to settle (Network Idle)
     await this.page.waitForLoadState('networkidle');
+  }
+
+  /**
+   * Add one or more products to Compare, verify them, and close the Toast message.
+   * @param products - List of Product objects that need to be added
+   */
+  @step('Add multiple products to compare and verify toast')
+  async addProductsToCompare(...products: Product[]): Promise<void> {
+    for (const product of products) {
+      await this.performActionOnProduct(product, 'Compare');
+      // Verify toast message displays the correct product name.
+      await this.verifyProductInToast(product.name);
+    }
   }
 
   /**
@@ -116,7 +128,7 @@ export class ProductPage extends ProductLocators {
   @step('Get all products on the page')
   async getAllProducts(): Promise<Product[]> {
     const products: Product[] = [];
-    
+
     // Ensure at least one product is loaded before scraping
     await this.productThumbnail.first().waitFor({ state: 'visible' });
 
@@ -127,9 +139,9 @@ export class ProductPage extends ProductLocators {
       const nameElement = this.productName.nth(i);
       const name = await nameElement.innerText();
       const priceText = await this.productPrice.nth(i).innerText();
-      
+
       // Clean price string and convert to number (e.g., "$122.00" -> 122)
-      const price = Number(priceText.replace(/[^0-9.-]+/g, ""));
+      const price = Number(priceText.replace(/[^0-9.-]+/g, ''));
 
       // Retrieve ID from the product link
       const href = await nameElement.getAttribute('href') || '';
@@ -139,19 +151,19 @@ export class ProductPage extends ProductLocators {
       products.push({
         id: id,
         name: name.trim(),
-        description: "", // Placeholder: Detailed info usually requires opening product page
+        description: '', // Placeholder: Detailed info usually requires opening product page
         price: price,
-        imageUrl: "",    // Placeholder: Can be implemented by selecting the img src
-        brand: "",       // Placeholder
+        imageUrl: '',    // Placeholder: Can be implemented by selecting the img src
+        brand: '',       // Placeholder
       });
     }
     return products;
   }
 
   @step('Click to navigate to compare page')
-  async clickNavigateToComparePage(): Promise<void> {
-    await this.btnNavigateToComparePage.waitFor({ state: 'visible' });
-    await this.btnNavigateToComparePage.click();
+  async clickNavigateToComparePage(productName: string): Promise<void> {
+    await this.btnNavigateToComparePage(productName).waitFor({ state: 'visible' });
+    await this.btnNavigateToComparePage(productName).click();
     await this.page.waitForLoadState('networkidle');
   }
 
@@ -160,12 +172,9 @@ export class ProductPage extends ProductLocators {
    * @param expectedMessage - The message expected to be in the toast.
    */
   @step('Verify Toast Message')
-  async verifyProductInToast(expectedMessage: string): Promise<void> {
-    
-    // Wait for the toast to appear before assertion
-    await this.commonPage.toastMessage.waitFor({ state: 'visible' });
-    
-    // Assert that the toast contains the expected success text
-    await expect(this.commonPage.toastMessage).toContainText(expectedMessage);
+  async verifyProductInToast(productName: string): Promise<void> {
+    const toast = this.commonPage.toastMessage(productName);
+    await toast.waitFor({ state: 'visible' });
+    await expect(toast).toBeVisible();
   }
 }

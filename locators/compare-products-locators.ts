@@ -12,7 +12,6 @@ export class CompareProductsLocators extends CommonLocators {
   table!: Locator;
   btnRemove!: (id?: string) => Locator;
   btnAddToCart!: Locator;
-  btnContinue!: Locator;
   emptyMessage!: Locator;
 
   locatorInitialization(): void {
@@ -20,8 +19,7 @@ export class CompareProductsLocators extends CommonLocators {
     this.table = this.page.locator('//table[contains(@class, "table-bordered")]').first();
     this.emptyMessage = this.page.locator('//div[@id="content"]//p');
     this.btnAddToCart = this.page.locator('//td//button[contains(@onclick, "cart")]');
-    this.btnContinue = this.page.locator("//a[text()='Continue']");
-    this.btnRemove =(id?: string) => {
+    this.btnRemove = (id?: string) => {
       const xpath = id
         ? `//a[text()="Remove" and contains(@href, "remove=${id}")]`
         : '//a[text()="Remove"]';

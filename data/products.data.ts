@@ -1,4 +1,4 @@
-import { Product } from "../models/product";
+import { Product } from '../models/product';
 
 export const products: Record<string, Product> = {
   htcTouch: {
@@ -8,7 +8,7 @@ export const products: Record<string, Product> = {
     availability: 'In Stock',
     description: 'HTC Touch HD is a smartphone that offers a large touchscreen display, powerful performance, and a sleek design. It features a 3.8-inch display, a 5-megapixel camera, and runs on the Windows Mobile operating system.',
     quantity: 10,
-    price: '$146.00',
+    price: '146.00',
     imageUrl: 'https://example.com/htc-touch-hd.jpg',
     brand: 'HTC',
     model: 'Product 1',
@@ -20,7 +20,7 @@ export const products: Record<string, Product> = {
     availability: 'In Stock',
     description: 'The Canon EOS 5D is a professional-grade digital SLR camera with a 22.3-megapixel sensor and advanced features for both photography and videography.',
     quantity: 5,
-    price: '$134.00',
+    price: '134.00',
     imageUrl: 'https://example.com/canon-eos-5d.jpg',
     brand: 'Canon',
     model: 'Product 3',
@@ -32,7 +32,7 @@ export const products: Record<string, Product> = {
     availability: 'In Stock',
     description: 'The Palm Treo Pro is a smartphone that offers a large touchscreen display, powerful performance, and a sleek design. It features a 3.8-inch display, a 5-megapixel camera, and runs on the Windows Mobile operating system.',
     quantity: 8,
-    price: '$337.99',
+    price: '337.99',
     imageUrl: 'https://example.com/palm-treo-pro.jpg',
     brand: 'Palm',
     model: 'Product 2',
@@ -44,7 +44,7 @@ export const products: Record<string, Product> = {
     availability: 'In Stock',
     description: 'The Nikon D300 is a professional-grade digital SLR camera with a 12.3-megapixel sensor and advanced features for both photography and videography.',
     quantity: 3,
-    price: '$98.00',
+    price: '98.00',
     imageUrl: 'https://example.com/nikon-d300.jpg',
     brand: 'Nikon',
     model: 'Product 4',
@@ -56,7 +56,7 @@ export const products: Record<string, Product> = {
     availability: 'In Stock',
     description: 'The iPod Touch is a portable media player that offers a sleek design, a high-resolution display, and access to a wide range of apps and games through the App Store.',
     quantity: 15,
-    price: '$194.00',
+    price: '194.00',
     imageUrl: 'https://example.com/ipod-touch.jpg',
     brand: 'Apple',
     model: 'Product 5',
