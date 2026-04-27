@@ -1,9 +1,15 @@
 import { faker } from '@faker-js/faker';
-import { AddressData, DefaultAddressOption, RegisterData, UpdateProfileData, User } from '../models/user';
-import { LoginCredentials } from '../models/user';
+import {
+  AddressData,
+  DefaultAddressOption,
+  RegisterData,
+  UpdateProfileData,
+  User,
+} from '../models/user';
 import { Constants } from '../utilities/constants';
 import { ENV } from '../models';
 import { readJsonFile } from '../utilities/jsonHandling';
+
 const COUNTRY_REGIONS: Record<string, string[]> = {
   'United States': ['California', 'Florida', 'Texas', 'New York'],
   'Canada': ['Ontario', 'Quebec', 'Alberta', 'British Columbia'],
@@ -22,7 +28,6 @@ export function createUpdateProfileData(): UpdateProfileData {
     telephone: faker.string.numeric(10),
   };
 }
-
 /**
  * Returns one random country from predefined address country list.
  */
@@ -36,15 +41,12 @@ export function getRandomCountry(): string {
 export function getRandomRegionByCountry(country: string): string {
   const regions = COUNTRY_REGIONS[country];
 
-  if (!regions || regions.length === 0) {
-    throw new Error(`No region list configured for country: ${country}`);
-  }
-
   return faker.helpers.arrayElement(regions);
 }
 
 /**
  * Creates random address data.
+ * Country and region are generated as one valid pair.
  */
 export function createAddressData(): AddressData {
   const country = getRandomCountry();
@@ -94,23 +96,28 @@ export function createFakePassword(): string {
 export function createStrongPassword(): string {
   return createFakePassword();
 }
+
 /**
- * 
- * @returns 
+ * Gets login credentials from environment variables.
  */
-export function getLoginCredentials(): LoginCredentials {
-  if (!Constants.LOGIN_EMAIL || !Constants.LOGIN_PASSWORD) {
+export function getLoginCredentials(): User {
+  if (!Constants.LOGIN_USERNAME || !Constants.LOGIN_PASSWORD) {
     throw new Error(
-      `Missing LOGIN_EMAIL or LOGIN_PASSWORD in profiles/.env.${Constants.ENV}`,
+      `Missing LOGIN_USERNAME or LOGIN_PASSWORD in profiles/.env.${Constants.ENV}`,
     );
   }
 
   return {
-    email: Constants.LOGIN_EMAIL,
+    username: Constants.LOGIN_USERNAME,
     password: Constants.LOGIN_PASSWORD,
   };
 }
+
+/**
+ * Loads user data from JSON by environment.
+ */
 export function loadUserFromJson(env = Constants.ENV): User {
   const normalizedEnv = env.toLowerCase() as ENV;
+
   return readJsonFile<User>(Constants.USERS_JSON_FILE, normalizedEnv);
 }

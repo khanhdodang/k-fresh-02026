@@ -1,4 +1,5 @@
-import { test, expect } from '../../pages/base-page';
+import { expect } from '@playwright/test';
+import { test } from '../../pages/base-page';
 import {
   createAddressData,
   createRegisterData,
@@ -6,107 +7,116 @@ import {
   createUpdateProfileData,
 } from '../../data/user.helper';
 import { Constants } from '../../utilities/constants';
+import { user } from '../../data/login.data';
+import type { UserProfile } from '../../models/user';
 
 test.describe('TC001 - My Account Dashboard', () => {
-  test.beforeEach(async ({ commonPage, credentials }) => {
-    await commonPage.goto(Constants.LOGIN_URL);
-    await commonPage.login(credentials.email, credentials.password);
+  test.beforeEach(async ({ loginPage }) => {
+    await loginPage.goto();
+    await loginPage.login(user);
   });
 
   test('should show dashboard heading, shortcuts and right navigation', async ({
     page,
-    commonPage,
-    profilesPage,
+    profilePage,
   }) => {
     await expect(page).toHaveURL(Constants.MY_ACCOUNT_URL);
-    await commonPage.expectMyAccountPage();
-    await profilesPage.expectMainAccountShortcuts();
+    await expect(profilePage.accountHeading).toBeVisible();
+    await profilePage.expectMainAccountShortcuts();
   });
 });
 
 test.describe('TC002 - Update Account Information', () => {
-  test.beforeEach(async ({ commonPage, credentials }) => {
-    await commonPage.goto(Constants.LOGIN_URL);
-    await commonPage.login(credentials.email, credentials.password);
+  test.beforeEach(async ({ loginPage }) => {
+    await loginPage.goto();
+    await loginPage.login(user);
   });
 
   test('should update first name, last name and telephone successfully', async ({
     page,
-    profilesPage,
+    profilePage,
   }) => {
     const updatedData = createUpdateProfileData();
-    await profilesPage.openEditAccountPage();
-    await profilesPage.updateAccountInformation(updatedData);
-    await profilesPage.expectAccountUpdateSuccessMessage();
+    await profilePage.btnEditAccount.click();
+    await profilePage.updateAccountInformation(updatedData);
+    await profilePage.expectAccountUpdateSuccessMessage();
     await expect(page).toHaveURL(Constants.MY_ACCOUNT_URL);
-    await profilesPage.openEditAccountPage();
-    const actualData = await profilesPage.getEditAccountValues();
-    expect(actualData.firstName).toBe(updatedData.firstName);
-    expect(actualData.lastName).toBe(updatedData.lastName);
-    expect(actualData.telephone).toBe(updatedData.telephone);
+    await profilePage.btnEditAccount.click();
+    await profilePage.getEditAccountValues();
+    await profilePage.expectEditAccountValues(updatedData);
   });
 });
 
 test.describe('TC003 - Change Password', () => {
   test('should change password from My Account right after register', async ({
     page,
-    commonPage,
-    profilesPage,
+    registerPage,
+    profilePage,
   }) => {
     const registerData = createRegisterData();
     const changedPassword = createStrongPassword();
+    const userProfile: UserProfile = {
+      firstName: registerData.firstName,
+      lastName: registerData.lastName,
+      email: registerData.email,
+      phone: registerData.telephone,
+      password: registerData.password,
+    };
 
-    await commonPage.goto(Constants.REGISTER_URL);
-    await commonPage.registerAccount(registerData);
+    await page.goto(Constants.REGISTER_URL);
+    await registerPage.fillRegistrationForm(userProfile);
+    await registerPage.clickAgreeTermsCheckbox();
+    await registerPage.submitRegistrationForm();
     await expect(page).toHaveURL(/route=account\/success|route=account\/account/);
+
     if (page.url().includes('route=account/success')) {
-      await commonPage.btnContinue.click();
+      await page.getByRole('link', { name: 'Continue' }).first().click();
     }
+
     await expect(page).toHaveURL(Constants.MY_ACCOUNT_URL);
-    await profilesPage.openChangePasswordPage();
-    await profilesPage.changePassword(changedPassword);
+    await profilePage.openChangePasswordPage();
+    await profilePage.changePassword(changedPassword);
     await expect(page).toHaveURL(Constants.MY_ACCOUNT_URL);
-    await expect(commonPage.alertSuccessUpdate).toContainText(Constants.CHANGE_PASSWORD_SUCCESS_MESSAGE);
+    await profilePage.expectChangePasswordSuccessMessage();
+
   });
 });
 
 test.describe('TC004 - Add New Address', () => {
-  test.beforeEach(async ({ commonPage, credentials }) => {
-    await commonPage.goto(Constants.LOGIN_URL);
-    await commonPage.login(credentials.email, credentials.password);
+  test.beforeEach(async ({ loginPage }) => {
+    await loginPage.goto();
+    await loginPage.login(user);
   });
 
   test('should add a new address and show it in Address Book', async ({
     page,
-    profilesPage,
-    commonPage,
+    profilePage,
   }) => {
     const addressData = createAddressData();
-    await profilesPage.openAddAddressPage();
-    await profilesPage.addNewAddress(addressData);
+    await profilePage.openAddAddressPage();
+    await profilePage.addNewAddress(addressData);
     await expect(page).toHaveURL(Constants.ADDRESS_BOOK_URL);
-    await expect(commonPage.alertSuccessUpdate).toContainText(Constants.ADD_ADDRESS_SUCCESS_MESSAGE);
-    await profilesPage.expectAddressPresent(addressData);
+    await profilePage.expectAddAddressSuccessMessage();
+    await profilePage.expectAddressPresent(addressData);
   });
 });
 
 test.describe('TC005 - Logout', () => {
-  test.beforeEach(async ({ commonPage, credentials }) => {
-    await commonPage.goto(Constants.LOGIN_URL);
-    await commonPage.login(credentials.email, credentials.password);
+  test.beforeEach(async ({ loginPage }) => {
+    await loginPage.goto();
+    await loginPage.login(user);
   });
 
   test('should logout from My Account page and show confirmation', async ({
     page,
-    commonPage,
+    profilePage,
   }) => {
-    await commonPage.expectMyAccountPage();
-    await commonPage.logoutFromSidebar();
+    await expect(profilePage.accountHeading).toBeVisible();
+    await profilePage.btnLogout.click();
     await expect(page).toHaveURL(Constants.LOGOUT_URL);
-    await expect(commonPage.logoutHeading).toBeVisible();
-    await expect(commonPage.logoutMessage).toContainText(Constants.LOGOUT_CONFIRM_MESSAGE);
-    await expect(commonPage.continueLogoutButton).toBeVisible();
-    await commonPage.continueLogoutButton.click();
+    await profilePage.expectLogoutSuccessMessage();
+    await expect(profilePage.btnLogoutContinue).toBeVisible();
+    await profilePage.btnLogoutContinue.click();
     await expect(page).toHaveURL(Constants.LOGOUT_REDIRECT_URL);
   });
 });

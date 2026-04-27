@@ -1,7 +1,5 @@
 import './env.loader';
 import { defineConfig, devices } from '@playwright/test';
-import dotenv from 'dotenv';
-import path from 'node:path';
 import { Constants } from './utilities/constants';
 
 /**
