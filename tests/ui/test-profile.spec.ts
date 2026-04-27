@@ -1,4 +1,3 @@
-import { expect } from '@playwright/test';
 import { test } from '../../pages/base-page';
 import {
   createAddressData,
@@ -17,11 +16,9 @@ test.describe('TC001 - My Account Dashboard', () => {
   });
 
   test('should show dashboard heading, shortcuts and right navigation', async ({
-    page,
     profilePage,
   }) => {
-    await expect(page).toHaveURL(Constants.MY_ACCOUNT_URL);
-    await expect(profilePage.accountHeading).toBeVisible();
+    await profilePage.verifyMyAccountPage();
     await profilePage.expectMainAccountShortcuts();
   });
 });
@@ -33,14 +30,13 @@ test.describe('TC002 - Update Account Information', () => {
   });
 
   test('should update first name, last name and telephone successfully', async ({
-    page,
     profilePage,
   }) => {
     const updatedData = createUpdateProfileData();
     await profilePage.btnEditAccount.click();
     await profilePage.updateAccountInformation(updatedData);
     await profilePage.expectAccountUpdateSuccessMessage();
-    await expect(page).toHaveURL(Constants.MY_ACCOUNT_URL);
+    await profilePage.verifyMyAccountPage();
     await profilePage.btnEditAccount.click();
     await profilePage.getEditAccountValues();
     await profilePage.expectEditAccountValues(updatedData);
@@ -49,7 +45,7 @@ test.describe('TC002 - Update Account Information', () => {
 
 test.describe('TC003 - Change Password', () => {
   test('should change password from My Account right after register', async ({
-    page,
+    commonPage,
     registerPage,
     profilePage,
   }) => {
@@ -63,22 +59,18 @@ test.describe('TC003 - Change Password', () => {
       password: registerData.password,
     };
 
-    await page.goto(Constants.REGISTER_URL);
+    await commonPage.goto(Constants.REGISTER_URL);
     await registerPage.fillRegistrationForm(userProfile);
     await registerPage.clickAgreeTermsCheckbox();
     await registerPage.submitRegistrationForm();
-    await expect(page).toHaveURL(/route=account\/success|route=account\/account/);
+    await profilePage.verifyRegistrationResultPage();
+    await profilePage.continueFromRegistrationSuccessIfNeeded();
 
-    if (page.url().includes('route=account/success')) {
-      await page.getByRole('link', { name: 'Continue' }).first().click();
-    }
-
-    await expect(page).toHaveURL(Constants.MY_ACCOUNT_URL);
+    await profilePage.verifyMyAccountPage();
     await profilePage.openChangePasswordPage();
     await profilePage.changePassword(changedPassword);
-    await expect(page).toHaveURL(Constants.MY_ACCOUNT_URL);
+    await profilePage.verifyMyAccountPage();
     await profilePage.expectChangePasswordSuccessMessage();
-
   });
 });
 
@@ -89,13 +81,12 @@ test.describe('TC004 - Add New Address', () => {
   });
 
   test('should add a new address and show it in Address Book', async ({
-    page,
     profilePage,
   }) => {
     const addressData = createAddressData();
     await profilePage.openAddAddressPage();
     await profilePage.addNewAddress(addressData);
-    await expect(page).toHaveURL(Constants.ADDRESS_BOOK_URL);
+    await profilePage.verifyAddressBookPage();
     await profilePage.expectAddAddressSuccessMessage();
     await profilePage.expectAddressPresent(addressData);
   });
@@ -108,15 +99,12 @@ test.describe('TC005 - Logout', () => {
   });
 
   test('should logout from My Account page and show confirmation', async ({
-    page,
     profilePage,
   }) => {
-    await expect(profilePage.accountHeading).toBeVisible();
-    await profilePage.btnLogout.click();
-    await expect(page).toHaveURL(Constants.LOGOUT_URL);
-    await profilePage.expectLogoutSuccessMessage();
-    await expect(profilePage.btnLogoutContinue).toBeVisible();
-    await profilePage.btnLogoutContinue.click();
-    await expect(page).toHaveURL(Constants.LOGOUT_REDIRECT_URL);
+    await profilePage.verifyMyAccountPage();
+    await profilePage.logout();
+    await profilePage.verifyLogoutPage();
+    await profilePage.continueAfterLogout();
+    await profilePage.verifyLogoutRedirectPage();
   });
 });

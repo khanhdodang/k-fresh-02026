@@ -4,6 +4,7 @@ import { CommonPage } from './common-page';
 import { AddressData, UpdateProfileData, UserProfile } from '../models/user';
 import { step } from '../utilities/logging';
 import { Messages } from '../data/messages.data';
+import { Constants } from '../utilities/constants';
 
 /**
  * Page object for user profile actions in My Account area.
@@ -14,6 +15,14 @@ export class ProfilePage extends ProfileLocators {
   constructor(page: Page) {
     super(page);
     this.commonPage = new CommonPage(page);
+  }
+
+  /**
+   * Verifies My Account page URL and heading.
+   */
+  async verifyMyAccountPage(): Promise<void> {
+    await expect(this.page).toHaveURL(Constants.MY_ACCOUNT_URL);
+    await expect(this.accountHeading).toBeVisible();
   }
 
   /**
@@ -46,6 +55,13 @@ export class ProfilePage extends ProfileLocators {
   }
 
   /**
+   * Opens Edit Account page.
+   */
+  async openEditAccountPage(): Promise<void> {
+    await this.btnEditAccount.click();
+  }
+
+  /**
    * Updates first name, last name and telephone.
    */
   async updateAccountInformation(data: UpdateProfileData): Promise<void> {
@@ -65,12 +81,6 @@ export class ProfilePage extends ProfileLocators {
     );
   }
 
-  async expectAddAddressSuccessMessage(): Promise<void> {
-    await expect(this.alertSuccessUpdate).toBeVisible();
-    await expect(this.alertSuccessUpdate).toContainText(
-      Messages.ADD_ADDRESS_SUCCESS_MESSAGE,
-    );
-  }
   /**
    * Reads values from Edit Account form for data persistence validation.
    */
@@ -82,20 +92,17 @@ export class ProfilePage extends ProfileLocators {
     };
   }
 
+  /**
+   * Verifies Edit Account form values against expected data.
+   */
   async expectEditAccountValues(expectedData: UpdateProfileData): Promise<void> {
-  const actualData = await this.getEditAccountValues();
+    const actualData = await this.getEditAccountValues();
 
-  expect(actualData.firstName).toBe(expectedData.firstName);
-  expect(actualData.lastName).toBe(expectedData.lastName);
-  expect(actualData.telephone).toBe(expectedData.telephone);
+    expect(actualData.firstName).toBe(expectedData.firstName);
+    expect(actualData.lastName).toBe(expectedData.lastName);
+    expect(actualData.telephone).toBe(expectedData.telephone);
   }
 
-  async expectChangePasswordSuccessMessage(): Promise<void> {
-    await expect(this.alertSuccessUpdate).toBeVisible();
-    await expect(this.alertSuccessUpdate).toContainText(
-      Messages.CHANGE_PASSWORD_SUCCESS_MESSAGE,
-    );
-  }
   /**
    * Opens Change Password page from side menu.
    */
@@ -113,6 +120,16 @@ export class ProfilePage extends ProfileLocators {
   }
 
   /**
+   * Verifies change password success message.
+   */
+  async expectChangePasswordSuccessMessage(): Promise<void> {
+    await expect(this.alertSuccessUpdate).toBeVisible();
+    await expect(this.alertSuccessUpdate).toContainText(
+      Messages.CHANGE_PASSWORD_SUCCESS_MESSAGE,
+    );
+  }
+
+  /**
    * Opens Address Book page and then Add Address form.
    */
   @step('Open Add Address form')
@@ -124,7 +141,6 @@ export class ProfilePage extends ProfileLocators {
   /**
    * Adds a new address with provided data.
    *
-   * Note:
    * Country and region are generated in user.helper.ts.
    * This page object only uses the provided data and does not generate random data.
    */
@@ -145,22 +161,59 @@ export class ProfilePage extends ProfileLocators {
   }
 
   /**
-   * Selects country first, waits for region dropdown to reload, then selects region.
+   * Selects country first, waits for the expected region option, then selects region.
    */
+  async selectCountryAndRegion(country: string, region: string): Promise<void> {
+    await expect(this.countryDropdown(country)).toBeAttached();
+
+    await this.selectAddressCountry.selectOption({ label: country });
+    await this.selectAddressRegion.waitFor({ state: 'visible' });
+
+    await expect(this.regionDropdown(region)).toBeAttached();
+
+    await this.selectAddressRegion.selectOption({ label: region });
+  }
+
   /**
- * Selects country first, waits for the expected region option, then selects region.
- */
-async selectCountryAndRegion(country: string, region: string): Promise<void> {
-  await expect(this.countryDropdown(country)).toBeAttached();
-// Selecting country triggers region dropdown to reload, so we wait for the expected region option to be attached before selecting.
-  await this.selectAddressCountry.selectOption({ label: country });
-// Wait for the expected region option to be attached to ensure the dropdown is reloaded and ready for interaction.
-  await this.selectAddressRegion.waitFor({ state: 'visible' });
-// Wait for the expected region option to be attached to ensure the dropdown is reloaded and ready for interaction.
-  await expect(this.regionDropdown(region)).toBeAttached();
-// Now we can safely select the region.
-  await this.selectAddressRegion.selectOption({ label: region });
-}
+   * Verifies Address Book page URL.
+   */
+  async verifyAddressBookPage(): Promise<void> {
+    await expect(this.page).toHaveURL(Constants.ADDRESS_BOOK_URL);
+  }
+
+  /**
+   * Verifies user lands on account success or My Account right after registration.
+   */
+  async verifyRegistrationResultPage(): Promise<void> {
+    await expect(this.page).toHaveURL(/route=account\/success|route=account\/account/);
+  }
+
+  /**
+   * Clicks Continue when user is on account success page.
+   */
+  async continueFromRegistrationSuccessIfNeeded(): Promise<void> {
+    if (this.page.url().includes('route=account/success')) {
+      await this.btnContinue.first().click();
+    }
+  }
+
+  /**
+   * Verifies add address success message.
+   */
+  async expectAddAddressSuccessMessage(): Promise<void> {
+    await expect(this.alertSuccessUpdate).toBeVisible();
+    await expect(this.alertSuccessUpdate).toContainText(
+      Messages.ADD_ADDRESS_SUCCESS_MESSAGE,
+    );
+  }
+
+  /**
+   * Verifies an added address is listed in Address Book.
+   */
+  async expectAddressPresent(data: AddressData): Promise<void> {
+    await expect(this.page.getByText(data.address1, { exact: false })).toBeVisible();
+    await expect(this.page.getByText(data.city, { exact: false })).toBeVisible();
+  }
 
   /**
    * Verifies account shortcuts and side links required by TC001.
@@ -184,14 +237,6 @@ async selectCountryAndRegion(country: string, region: string): Promise<void> {
   }
 
   /**
-   * Verifies an added address is listed in Address Book.
-   */
-  async expectAddressPresent(data: AddressData): Promise<void> {
-    await expect(this.page.getByText(data.address1, { exact: false })).toBeVisible();
-    await expect(this.page.getByText(data.city, { exact: false })).toBeVisible();
-  }
-
-  /**
    * Verifies Edit Account form fields are visible.
    */
   async expectEditAccountUpdate(): Promise<void> {
@@ -200,7 +245,43 @@ async selectCountryAndRegion(country: string, region: string): Promise<void> {
     await expect(this.inputTelephone).toBeVisible();
     await expect(this.inputUpdateEmail).toBeVisible();
   }
+
+  /**
+   * Clicks Logout from My Account page.
+   */
+  async logout(): Promise<void> {
+    await this.btnLogout.click();
+  }
+
+  /**
+   * Verifies Logout confirmation page URL and message.
+   */
+  async verifyLogoutPage(): Promise<void> {
+    await expect(this.page).toHaveURL(Constants.LOGOUT_URL);
+    await this.expectLogoutSuccessMessage();
+  }
+
+  /**
+   * Verifies logout success confirmation message.
+   */
   async expectLogoutSuccessMessage(): Promise<void> {
-    await expect(this.page.getByText(Messages.LOGOUT_CONFIRM_MESSAGE, { exact: false })).toBeVisible();
+    await expect(
+      this.page.getByText(Messages.LOGOUT_CONFIRM_MESSAGE, { exact: false }),
+    ).toBeVisible();
+  }
+
+  /**
+   * Clicks Continue button after logout.
+   */
+  async continueAfterLogout(): Promise<void> {
+    await expect(this.btnLogoutContinue).toBeVisible();
+    await this.btnLogoutContinue.click();
+  }
+
+  /**
+   * Verifies user is redirected after logout.
+   */
+  async verifyLogoutRedirectPage(): Promise<void> {
+    await expect(this.page).toHaveURL(Constants.LOGOUT_REDIRECT_URL);
   }
 }
