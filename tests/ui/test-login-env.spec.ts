@@ -1,4 +1,4 @@
-import { test } from '../../pages/base-page';
+// import { test } from '../../pages/base-page';
 import { loadUserFromJson } from '../../data/user.helper';
 import { Constants } from '../../utilities/constants';
 

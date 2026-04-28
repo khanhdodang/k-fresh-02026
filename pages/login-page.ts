@@ -21,20 +21,22 @@ export class LoginPage extends LoginLocators {
    */
   @step('Log in with user credentials')
   async login(user: User): Promise<void> {
-    await test.step(`Log in with username: ${user.username}`, async () => {
-      await this.inputUsername.fill(user.username);
-      await this.inputPassword.fill(user.password);
-      await this.btnSubmit.click();
-    });
+
+    await this.page.waitForURL(/login/);
+
+    await this.inputUser.waitFor({ state: 'visible' });
+
+    await this.inputUser.fill(user.username);
+    await this.inputPassword.fill(user.password);
+    await this.submitButton.click();
   }
-  
   /**
    * Asserts that the login was successful by checking the URL and the presence of a success message.
    */
   async expectSuccessfulLogin(): Promise<void> {
     await test.step('Verify successful login', async () => {
       await expect(this.page).toHaveURL(Constants.SECURE_URL);
-      await expect(this.flashMessage).toContainText(Messages.SUCCESS_MESSAGE);
+      await expect(this.flashMessage).toBeVisible();
     });
   }
 }

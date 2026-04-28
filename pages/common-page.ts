@@ -34,7 +34,6 @@ export class CommonPage extends CommonLocators {
             }
         }
     }
-
     /**
      * Double Click on Locator
      * @param locator
