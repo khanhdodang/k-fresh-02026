@@ -111,7 +111,7 @@ test.describe('Cart Tests', () => {
     });
 
     await test.step('Enter product quantity', async () => {
-      await productPage.setQuantity(product.quantity);
+      await productPage.setQuantity(3);
     });
 
     /** Add product to cart */
@@ -125,7 +125,7 @@ test.describe('Cart Tests', () => {
     });
   });
 
-  test('TC_CART_03 - Add product to cart from homepage', async ({ homePage, cartPage }) => {
+  test('TC_CART_03 - Add product to cart from homepage', async ({ homePage, productPage }) => {
     /** Navigate to homepage */
     await test.step('Navigate to homepage', async () => {
       await homePage.commonPage.goto(Constants.BASE_URL);
@@ -134,11 +134,12 @@ test.describe('Cart Tests', () => {
     /** Select product card and add to cart */
     await test.step('Select product card and add to cart', async () => {
       await homePage.hoverAndAddToCart(product.name);
+      
     });
 
     /** Open cart page */
     await test.step('Open cart page', async () => {
-      await cartPage.clickViewCartLink();
+      await productPage.clickViewCartLink();
     });
   });
 

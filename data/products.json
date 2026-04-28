@@ -1,11 +1,11 @@
 {
   "qa": {
-    "name": "MacBook Pro",
+    "name": "HP LP3065",
     "quantity": 2,
-    "price": 2000
+    "price": 122.00
   },
   "staging": {
-    "name": "MacBook Pro",
+    "name": "HP LP3065",
     "quantity": 2,
     "price": 2000
   },

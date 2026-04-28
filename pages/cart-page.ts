@@ -11,9 +11,6 @@ const formatCurrency = (amount: number): string =>
   }).format(amount);
 
 export class CartPage extends CartLocators {
-  verifyCartPageDisplayed() {
-    throw new Error('Method not implemented.');
-  }
 
   commonPage: CommonPage;
 
@@ -27,13 +24,9 @@ export class CartPage extends CartLocators {
    */
   @step('Click Cart Button')
   async clickCartButton(): Promise<void> {
-    // await this.btnCart.click();
-    if (!(await this.miniCartDrawer.isVisible())) {
-      await this.btnCart.click({ force: true });
-    }
-    await expect(this.miniCartDrawer).toBeVisible();
-    await this.btnViewCart.click({force: true});
+    await this.commonPage.click(this.btnCart);
   }
+
 
   /**
    * Clicks the "Checkout" button to proceed to the checkout page.
@@ -90,7 +83,8 @@ export class CartPage extends CartLocators {
    */
   @step('Clicking the view cart link in the success alert to navigate to the cart page')
   async clickViewCartLink(): Promise<void> {
-    await this.commonPage.roleLinkName('View Cart', false).click();
+    await expect(this.miniCartDrawer).toBeVisible();
+    await this.btnViewCart.click();
   }
 
   /**
@@ -121,7 +115,7 @@ export class CartPage extends CartLocators {
    */
   @step('Click Update Quantity Button')
   async clickUpdateQuantity(productName: string): Promise<void> {
-    await this.btnUpdate(productName).click({ force: true });
+    await this.commonPage.click(this.btnUpdate(productName));
   }
 
   /**

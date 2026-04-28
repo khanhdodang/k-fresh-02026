@@ -22,7 +22,7 @@ export class RegisterPage extends RegisterLocators {
     await this.inputFirstName.fill(userProfile.firstName);
     await this.inputLastName.fill(userProfile.lastName);
     await this.inputEmail.fill(userProfile.email);
-    await this.inputTelephone.fill(userProfile.phone);
+    await this.inputTelephone.fill(userProfile.telephone);
     await this.inputPassword.fill(userProfile.password);
     await this.inputPasswordConfirm.fill(userProfile.password);
   }
@@ -32,7 +32,7 @@ export class RegisterPage extends RegisterLocators {
    */
   @step('Submit Registration Form')
   async submitRegistrationForm(): Promise<void> {
-    await this.btnContinue.click();
+    await this.commonPage.click(this.btnContinue);
   }
 
   /**
@@ -40,7 +40,7 @@ export class RegisterPage extends RegisterLocators {
    */
   @step('Click Agree to Terms Checkbox')
   async clickAgreeTermsCheckbox(): Promise<void> {
-    await this.chkPrivacyPolicy.check();
+    await this.commonPage.click(this.chkPrivacyPolicy);
   }
 }
 

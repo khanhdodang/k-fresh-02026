@@ -42,7 +42,7 @@ export class CartLocators extends CommonLocators {
     this.miniCartDrawer = this.page.locator("//div[@data-position='right' and contains(@class,'mz-pure-drawer')][.//h5[contains(.,'Cart')]]");
 
     /** DROPDOWN CART **/
-    this.btnViewCart = this.page.getByRole("link", { name: 'View Cart' });
+    this.btnViewCart = this.miniCartDrawer.getByRole('link', {name: /View Cart/});
 
     /** CHECKOUT LINK */
     this.lnkCheckout = this.page.getByRole('link', {

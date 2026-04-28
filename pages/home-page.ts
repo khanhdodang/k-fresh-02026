@@ -17,7 +17,7 @@ export class HomePage extends HomeLocators {
    * Navigates to the homepage URL defined in Constants.
    */
   async goto(): Promise<void> {
-    await this.page.goto(Constants.HOME_PAGE_URL);
+    await this.page.goto(Constants.BASE_URL);
   }
 
   /**
@@ -26,7 +26,7 @@ export class HomePage extends HomeLocators {
    */
   @step('Select Menu')
   async selectMenu(menuName: string): Promise<void> {
-    await this.menuLink(menuName).click();
+    await this.commonPage.click(this.menuLink(menuName));
     await this.page.waitForLoadState('networkidle');
   }
 
@@ -45,11 +45,9 @@ export class HomePage extends HomeLocators {
 
   @step('Hover over product and click Add to Cart')
   async hoverAndAddToCart(productName: string): Promise<void> {
-    const product = this.getProductCard(productName);
-    const addBtn = this.getAddToCartButton(productName);
-    await product.hover();
-    await addBtn.waitFor({ state: 'visible' });
-    await addBtn.click({ force: true });
+    await this.commonPage.hover(this.productCard(productName));
+    await this.commonPage.click(this.getAddToCartButton(productName));
+    await this.commonPage.click(this.btnAddToCart);
   }
 
 }

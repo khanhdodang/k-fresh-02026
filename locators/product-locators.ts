@@ -18,7 +18,7 @@ export class ProductLocators extends CommonLocators {
     this.btnIncreaseQuantity = this.page.locator(
       '(//button[@aria-label="Increase quantity"])[2]',
     );
-    this.inputQuantity = this.page.locator('(//input[@name="quantity"])[1]');
+    this.inputQuantity = this.page.locator('(//input[@name="quantity"])[2]');
     this.divSuccessAlert = this.page.getByRole('alert');
     this.lnkViewCart = this.page
       .getByRole('link', { name: 'View Cart' })

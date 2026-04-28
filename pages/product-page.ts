@@ -5,9 +5,6 @@ import { ProductLocators } from '../locators/product-locators';
 import { Product } from '../models/product';
 
 export class ProductPage extends ProductLocators {
-  clickUpdateQuantity() {
-    throw new Error('Method not implemented.');
-  }
 
   commonPage: CommonPage;
 
@@ -23,7 +20,7 @@ export class ProductPage extends ProductLocators {
   @step('Increasing the product quantity by a specified number of times')
   async increaseQuantity(product: Product): Promise<void> {
     for (let index = 1; index < product.quantity; index++) {
-      await this.btnIncreaseQuantity.click();
+      await this.commonPage.click(this.btnIncreaseQuantity);
     }
   }
 
@@ -32,7 +29,7 @@ export class ProductPage extends ProductLocators {
    */
   @step('Clicking the add to cart button to add the product to the cart')
   async clickAddToCart(): Promise<void> {
-    await this.commonPage.roleButtonName('Add to Cart').click();
+    await this.commonPage.roleButtonName('Add to Cart').click({ force: true });
   }
 
   /**
@@ -49,7 +46,7 @@ export class ProductPage extends ProductLocators {
    */
   @step('Clicking the view cart link in the success alert to navigate to the cart page')
   async clickViewCartLink(): Promise<void> {
-    await this.commonPage.roleLinkName('View Cart', false).click();
+    await this.commonPage.roleLinkName('View Cart', false).click({ force: true });
   }
 
   /**
@@ -58,6 +55,6 @@ export class ProductPage extends ProductLocators {
      */
   @step('Set product quantity')
   async setQuantity(qty: number): Promise<void> {
-    await this.inputQuantity.fill(qty.toString());
+    await this.commonPage.fill(this.inputQuantity, qty.toString());
   }
 }
