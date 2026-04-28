@@ -36,5 +36,5 @@ export class ProfilePage extends ProfileLocators {
   async updateConfiguationSettings(settingsData: any): Promise<void> {
   
   }
-
 }
+
