@@ -5,6 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env ENV=qa npx playwright test --project=chromium",
+    "test:all": "cross-env ENV=qa npx playwright test",
+    "test:chrome": "cross-env ENV=qa npx playwright test --project=chromium",
+    "test:firefox": "cross-env ENV=qa npx playwright test --project=firefox",
+    "test:webkit": "cross-env ENV=qa npx playwright test --project=webkit",
+    "codegen": "npx playwright codegen https://ecommerce-playground.lambdatest.io/",
+    "test:ui": "cross-env ENV=qa npx playwright test --ui",
+    "test:debug": "cross-env ENV=qa npx playwright test --debug",
     "linter": "eslint . --ext .ts tests pages locators utilities data --fix"
   },
   "keywords": [],
@@ -22,7 +29,6 @@
     "dotenv": "^17.4.2",
     "eslint": "^10.2.1",
     "globals": "^17.5.0",
-    "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.0"
   }

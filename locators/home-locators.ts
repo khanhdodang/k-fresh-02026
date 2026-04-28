@@ -1,5 +1,5 @@
 import { Locator, Page } from '@playwright/test';
-import { CommonLocators } from '../locators/common-locators';
+import { CommonLocators } from './common-locators';
 
 export class HomeLocators extends CommonLocators {
     constructor(page: Page) {

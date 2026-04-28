@@ -32,7 +32,7 @@ export class CheckoutPage extends CheckoutLocators {
    * Clicks the "Continue" button for the specified section.
    */
   @step('Click Continue Button')
-  async clickContinueButton(section: string): Promise<void> {
+  async clickContinueButton(): Promise<void> {
   }
 
   /**
@@ -42,14 +42,6 @@ export class CheckoutPage extends CheckoutLocators {
   @step('Get Product List')
   async getProductList(): Promise<any[]> {
     return [];
-  }
-
-  /**
-   * Fills the billing details form with the provided information.
-   * @param details The billing details to fill.
-   */
-  @step('Fill Billing Details')
-  async fillBillingDetails(details: Address): Promise<void> {
   }
 
   /**
@@ -76,5 +68,4 @@ export class CheckoutPage extends CheckoutLocators {
   @step('Update Product Quantity')
   async updateProductQuantity(productName: string, quantity: number): Promise<void> {
   }
-
 }

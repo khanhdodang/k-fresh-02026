@@ -43,11 +43,10 @@ export class HomePage extends HomeLocators {
     await this.page.waitForURL(/route=product\/product|route=product%2Fproduct/);
   }
 
-  @step('Hover over product and click Add to Cart')
+   @step('Hover over product and click Add to Cart')
   async hoverAndAddToCart(productName: string): Promise<void> {
     await this.commonPage.hover(this.productCard(productName));
     await this.commonPage.click(this.getAddToCartButton(productName));
     await this.commonPage.click(this.btnAddToCart);
   }
-
 }

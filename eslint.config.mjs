@@ -20,6 +20,8 @@ export default defineConfig(
       quotes: ['warn', 'single', { avoidEscape: true }],
       'no-console': 'off',
       'no-unused-vars': 'off',
+      'eol-last': ['error', 'always'],
+      'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
     },
   },
 );

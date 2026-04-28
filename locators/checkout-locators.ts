@@ -1,9 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { CommonLocators } from './common-locators';
 
-/**
- * Class representing checkout locators
- */
 export class CheckoutLocators extends CommonLocators {
   /**
    * Creates an instance of CheckoutLocators

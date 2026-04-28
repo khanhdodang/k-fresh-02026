@@ -29,29 +29,28 @@ test.describe('Cart Tests', () => {
   });
 
   test('TC02 - Add Product to Cart', async ({ productPage, cartPage }) => {
-    await productPage.commonPage.goto(Constants.PRODUCT_PAGE_URL);
+    await productPage.commonPage.goto(Constants.BASE_URL);
+    await productPage.searchAndSelectProduct(product);
     await productPage.increaseQuantity(product);
     await productPage.clickAddToCart();
-    await productPage.verifyAddToCartSuccessMessage(
-      Messages.ADD_TO_CART_SUCCESS_MESSAGE,
-    );
+    await productPage.verifyAddToCartSuccessMessage(Messages.ADD_TO_CART_SUCCESS_MESSAGE);
     await productPage.clickViewCartLink();
     await cartPage.verifyProductAddedToCart(product);
   });
 
   test('TC03 - Remove Product from Cart', async ({ productPage, cartPage }) => {
-    await productPage.commonPage.goto(Constants.PRODUCT_PAGE_URL);
+    await productPage.commonPage.goto(Constants.BASE_URL);
+    await productPage.searchAndSelectProduct(product);
     await productPage.clickAddToCart();
-    await productPage.verifyAddToCartSuccessMessage(
-      Messages.ADD_TO_CART_SUCCESS_MESSAGE,
-    );
+    await productPage.verifyAddToCartSuccessMessage(Messages.ADD_TO_CART_SUCCESS_MESSAGE);
     await productPage.clickViewCartLink();
-    await cartPage.clickRemoveProduct(product);
+    await cartPage.clickRemoveProduct();
     await cartPage.verifyProductRemovedFromCart(product);
   });
 
   test('TC04 - Update Product Quantity', async ({ productPage, cartPage }) => {
-    await productPage.commonPage.goto(Constants.PRODUCT_PAGE_URL);
+    await productPage.commonPage.goto(Constants.BASE_URL);
+    await productPage.searchAndSelectProduct(product);
     await productPage.clickAddToCart();
     await productPage.verifyAddToCartSuccessMessage(
       Messages.ADD_TO_CART_SUCCESS_MESSAGE,
@@ -63,115 +62,48 @@ test.describe('Cart Tests', () => {
   });
 
   test('TC05 - Update Product Quantity to 0 (Remove via Quantity)', async ({ productPage, cartPage }) => {
-    await productPage.commonPage.goto(Constants.PRODUCT_PAGE_URL);
+    await productPage.commonPage.goto(Constants.BASE_URL);
+    await productPage.searchAndSelectProduct(product);
     await productPage.clickAddToCart();
-    await productPage.verifyAddToCartSuccessMessage(
-      Messages.ADD_TO_CART_SUCCESS_MESSAGE,
-    );
+    await productPage.verifyAddToCartSuccessMessage(Messages.ADD_TO_CART_SUCCESS_MESSAGE,);
     await productPage.clickViewCartLink();
     const productWithZeroQty = { ...product, quantity: 0 };
     await cartPage.updateProductQuantity(productWithZeroQty);
     await cartPage.verifyProductRemovedFromCart(product);
   });
-
   
   /** Test case Add-to-Cart of PThao */
   test('TC_CART_01 - Add product to cart', async ({ homePage, productPage, cartPage }) => {
-
-    /** Navigate to homepage */
-    await test.step('Navigate to homepage', async () => {
       await homePage.commonPage.goto(Constants.BASE_URL);
-    });
-
-    /** Select product from homepage and open product detail page */
-    await test.step('Select product from homepage and open product detail page', async () => {
       await homePage.selectProduct(product.name);
-    });
-
-    /** Add product to cart */
-    await test.step('Add product to cart', async () => {
       await productPage.clickAddToCart();
-    });
-
-    /** Open cart page */
-    await test.step('Open cart page', async () => {
       await cartPage.clickCartButton();
-    });
   });
 
   test('TC_CART_02 - Add product with multiple quantity successfully', async ({ homePage, productPage, cartPage }) => {
-    /** Navigate to homepage */
-    await test.step('Navigate to homepage', async () => {
       await homePage.commonPage.goto(Constants.BASE_URL);
-    });
-
-    /** Select product from homepage and open product detail page */
-    await test.step('Select product from homepage and open product detail page', async () => {
       await homePage.selectProduct(product.name);
-    });
-
-    await test.step('Enter product quantity', async () => {
       await productPage.setQuantity(3);
-    });
-
-    /** Add product to cart */
-    await test.step('Add product to cart', async () => {
       await productPage.clickAddToCart();
-    });
-
-    /** Open cart page */
-    await test.step('Open cart page', async () => {
       await cartPage.clickCartButton();
-    });
   });
 
   test('TC_CART_03 - Add product to cart from homepage', async ({ homePage, productPage }) => {
-    /** Navigate to homepage */
-    await test.step('Navigate to homepage', async () => {
       await homePage.commonPage.goto(Constants.BASE_URL);
-    });
-
-    /** Select product card and add to cart */
-    await test.step('Select product card and add to cart', async () => {
       await homePage.hoverAndAddToCart(product.name);
-      
-    });
-
-    /** Open cart page */
-    await test.step('Open cart page', async () => {
       await productPage.clickViewCartLink();
-    });
   });
 
   test('TC_CART_04 - Update product quantity in cart successfully', async ({ homePage, productPage, cartPage }) => {
-    /** Navigate to homepage */
-    await test.step('Navigate to homepage', async () => {
       await homePage.commonPage.goto(Constants.BASE_URL);
-    });
-
-    /** Select product card */
-    await test.step('Select product card and add to cart', async () => {
       await homePage.selectProduct(product.name);
-    });
-
-    /** Add product to cart */
-    await test.step('Add product to cart', async () => {
       await productPage.clickAddToCart();
       await productPage.verifyAddToCartSuccessMessage(
         Messages.ADD_TO_CART_SUCCESS_MESSAGE,
       );
       await productPage.clickViewCartLink();
-    });
-
-    /** Open cart page */
-    await test.step('Open cart page to verify update', async () => {
       await cartPage.clickCartButton();
-    });
-
-    /** Update product quantity in product detail page */
-    await test.step('Update product quantity', async () => {
       await cartPage.updateQuantity(2, product.name);
       await cartPage.clickUpdateQuantity(product.name);
-    });
   });
 });
