@@ -3,20 +3,11 @@ import { CommonPage } from './common-page';
 import { step } from '../utilities/logging';
 import { CartLocators } from '../locators/cart-locators';
 import { Product } from '../models/product';
-
-const formatCurrency = (amount: number): string =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(amount);
 import { Currency } from '../utilities/currency';
 import { AssertHelper } from './assert-helper-page';
 import { Assertions } from '../utilities/assertions';
 
 export class CartPage extends CartLocators {
-  verifyCartPageDisplayed() {
-    throw new Error('Method not implemented.');
-  }
 
   commonPage: CommonPage;
   assertHelper: AssertHelper;
@@ -32,12 +23,6 @@ export class CartPage extends CartLocators {
    */
   @step('Click Cart Button')
   async clickCartButton(): Promise<void> {
-    // await this.btnCart.click();
-    if (!(await this.miniCartDrawer.isVisible())) {
-      await this.btnCart.click({ force: true });
-    }
-    await expect(this.miniCartDrawer).toBeVisible();
-    await this.btnViewCart.click({force: true});
     await this.commonPage.click(this.btnCart);
   }
 
@@ -46,7 +31,7 @@ export class CartPage extends CartLocators {
    */
   @step('Click Checkout Button')
   async clickCheckoutButton(): Promise<void> {
-    await this.commonPage.roleButtonName('Checkout', true).click();
+    await this.commonPage.click(this.commonPage.roleButtonName('Checkout', true));
   }
 
   @step('Update Quantity')
@@ -101,7 +86,7 @@ export class CartPage extends CartLocators {
    */
   @step('Clicking the view cart link in the success alert to navigate to the cart page')
   async clickViewCartLink(): Promise<void> {
-    await this.commonPage.roleLinkName('View Cart', false).click();
+    await this.commonPage.click(this.roleLinkName('View Cart', false));
   }
 
   /**
@@ -132,7 +117,7 @@ export class CartPage extends CartLocators {
    */
   @step('Click Update Quantity Button')
   async clickUpdateQuantity(productName: string): Promise<void> {
-    await this.btnUpdate(productName).click({ force: true });
+    await this.commonPage.click(this.btnUpdate(productName));
   }
 
   /**
