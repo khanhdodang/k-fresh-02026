@@ -47,6 +47,6 @@ export class HomePage extends HomeLocators {
   async hoverAndAddToCart(productName: string): Promise<void> {
     await this.commonPage.hover(this.productCard(productName));
     await this.commonPage.click(this.getAddToCartButton(productName));
-    await this.btnAddToCart.click();
+    await this.commonPage.click(this.btnAddToCart);
   }
 }
