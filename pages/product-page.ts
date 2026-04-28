@@ -5,9 +5,6 @@ import { ProductLocators } from '../locators/product-locators';
 import { Product } from '../models/product';
 
 export class ProductPage extends ProductLocators {
-  clickUpdateQuantity() {
-    throw new Error('Method not implemented.');
-  }
 
   commonPage: CommonPage;
 
@@ -59,6 +56,7 @@ export class ProductPage extends ProductLocators {
   @step('Set product quantity')
   async setQuantity(qty: number): Promise<void> {
     await this.inputQuantity.fill(qty.toString());
+    
   @step('Search and Navigate to Product Page via UI Navigation')
   async searchAndSelectProduct(product: Product): Promise<void> {
     await this.commonPage.fill(this.searchInput.first(), product.name);
