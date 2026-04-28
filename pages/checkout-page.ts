@@ -339,16 +339,16 @@ export class CheckoutPage extends CheckoutLocators {
 
   /**
    * Sets the "Terms and Conditions" checkbox state based on the provided boolean value. 
-   * @param isCheck Determines whether to check or uncheck the terms and conditions checkbox.
+   * @param flag Determines whether to check or uncheck the terms and conditions checkbox.
    */
   @step('Set Terms and Conditions Checkbox')
-  async setTermsAndConditions(isCheck: boolean): Promise<void> {
+  async setTermsAndConditions(flag: boolean = true): Promise<void> {
     await this.commonPage.scrollTo(this.chkAgreeTerms);
     const currentlyChecked = await this.chkAgreeTerms.isChecked();
 
-    if (isCheck && !currentlyChecked) {
+    if (flag && !currentlyChecked) {
       await this.commonPage.click(this.chkAgreeTerms);
-    } else if (!isCheck && currentlyChecked) {
+    } else if (!flag && currentlyChecked) {
       await this.commonPage.click(this.chkAgreeTerms);
     }
     await this.commonPage.waitForMillis(Constants.TIMEOUTS.BUFFER_STEP_SECONDS * 1000);

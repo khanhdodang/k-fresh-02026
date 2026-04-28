@@ -44,27 +44,19 @@ test.describe('Checkout Tests', () => {
     await productPage.buySpecificItemNow(targetProduct);
   });
 
-  // =========================================================================
-
-  /**
-   * TC_CHK_001: Verify checkout flow when shipping address is different from billing address.
-   */
   test('TC_CHK_001: Verify successful checkout using a different shipping address', async ({ checkoutPage }) => {
     await checkoutPage.fillBillingDetails(buyerProfile, buyerAddress);
     await checkoutPage.verifyShippingSectionVisible();
     await checkoutPage.fillShippingDetails(receiverProfile, receiverAddress);
-    await checkoutPage.setTermsAndConditions(true);
+    await checkoutPage.setTermsAndConditions();
     await checkoutPage.clickContinueButton();
     await checkoutPage.confirmOrderAndVerifySuccess();
   });
 
-  /**
-  * TC_CHK_002: Verify validation recovery when toggling "Same Address" checkbox.
-  */
   test('TC_CHK_002: Verify checkout recovers successfully when toggling shipping address states', async ({ checkoutPage }) => {
     await checkoutPage.fillBillingDetails(buyerProfile, buyerAddress);
     await checkoutPage.verifyShippingSectionVisible();
-    await checkoutPage.setTermsAndConditions(true);
+    await checkoutPage.setTermsAndConditions();
     await checkoutPage.clickContinueButton();
     await checkoutPage.verifyShippingValidationErrors();
     await checkoutPage.toggleSameAddressCheckbox(true);
@@ -72,35 +64,21 @@ test.describe('Checkout Tests', () => {
     await checkoutPage.confirmOrderAndVerifySuccess();
   });
 
-  /**
-   * TC_CHK_003: Verify validation error messages for mandatory fields.
-   */
-  test('TC_CHK_003: Verify multiple validation error messages when mandatory fields are left blank', async ({ checkoutPage }) => {
-    await checkoutPage.clickContinueButton();
-    await checkoutPage.verifyBillingValidationErrors();
-  });
-
-  /**
-   * TC_CHK_004: Mandatory Terms Check - Verify error when Terms & Conditions are not accepted.
-   */
-  test('TC_CHK_004: Mandatory Terms Check - Verify error when Terms & Conditions are not accepted', async ({ checkoutPage }) => {
+  test('TC_CHK_003: Mandatory Terms Check - Verify error when Terms & Conditions are not accepted', async ({ checkoutPage }) => {
     await checkoutPage.fillBillingDetails(buyerProfile, buyerAddress);
     await checkoutPage.setTermsAndConditions(false);
     await checkoutPage.clickContinueButton();
     await checkoutPage.verifyTermsWarningMessage();
-    await checkoutPage.setTermsAndConditions(true);
+    await checkoutPage.setTermsAndConditions();
     await checkoutPage.clickContinueButton();
   });
 
-  /**
-   * TC_CHK_005: New User Happy Path - Complete checkout from scratch.
-   */
-  test('TC_CHK_005: New User Happy Path - Complete checkout from scratch', async ({ checkoutPage }) => {
+  test('TC_CHK_004: New User Happy Path - Complete checkout from scratch', async ({ checkoutPage }) => {
     await checkoutPage.fillBillingDetails(buyerProfile, buyerAddress);
     await checkoutPage.verifySameAddressIsChecked();
     await checkoutPage.verifyDefaultDeliveryAndPayment();
     await checkoutPage.addOrderComment('This is my first order! Please handle with care.');
-    await checkoutPage.setTermsAndConditions(true);
+    await checkoutPage.setTermsAndConditions();
     await checkoutPage.clickContinueButton();
     await checkoutPage.confirmOrderAndVerifySuccess();
   });

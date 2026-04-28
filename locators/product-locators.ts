@@ -12,8 +12,7 @@ export class ProductLocators extends CommonLocators {
   btnIncreaseQuantity!: Locator;
   inputQuantity!: Locator;
   divSuccessAlert!: Locator;
-  searchInput!: Locator;
-  searchBtn!: Locator;
+  btnSearch!: Locator;
   firstProductImage!: Locator;
   btnBuyNow!: Locator;
 
@@ -26,8 +25,7 @@ export class ProductLocators extends CommonLocators {
     this.inputQuantity = this.page.locator('(//input[@name="quantity"])[1]');
     this.divSuccessAlert = this.page.getByRole('alert');
     this.btnBuyNow = this.page.getByRole('button', { name: /Buy Now/i }).first();
-    this.searchInput = this.page.locator('input[name="search"]').first();
-    this.searchBtn = this.page.locator('#search button').first();
+    this.btnSearch = this.page.locator('#search button').first();
     this.firstProductImage = this.page.locator('.product-layout').first().locator('.image a');
   }
 }
