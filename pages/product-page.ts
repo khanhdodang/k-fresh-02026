@@ -56,8 +56,8 @@ export class ProductPage extends ProductLocators {
   */
   @step('Buy Specific Item Now via UI Navigation')
   async buySpecificItemNow(searchTerm: string): Promise<void> {
-    await this.commonPage.fill(this.searchInput, searchTerm);
-    await this.commonPage.press(this.searchInput, 'Enter');
+    await this.commonPage.fill(this.inputSearch, searchTerm);
+    await this.commonPage.press(this.inputSearch, 'Enter');
     await this.page.waitForLoadState('domcontentloaded');
     await this.commonPage.waitForVisible(this.firstProductImage);
     await this.commonPage.click(this.firstProductImage);
@@ -65,5 +65,13 @@ export class ProductPage extends ProductLocators {
     await this.commonPage.click(this.btnBuyNow);
     await expect(this.page).toHaveURL(/.*checkout\/checkout/, { timeout: Constants.TIMEOUTS.PAGE_EVENT_LOAD });
   }
+  @step('Search and Navigate to Product Page via UI Navigation')
+  async searchAndSelectProduct(product: Product): Promise<void> {
+    await this.commonPage.fill(this.inputSearch.first(), product.name);
+    await this.commonPage.press(this.inputSearch.first(), 'Enter');
+    await this.page.waitForLoadState('domcontentloaded');
+    await this.commonPage.waitForVisible(this.firstProductImage);
+    await this.commonPage.click(this.firstProductImage);
+    await this.page.waitForLoadState('domcontentloaded');
+  }
 }
-

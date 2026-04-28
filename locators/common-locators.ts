@@ -26,6 +26,7 @@ export class CommonLocators {
     btnCancelDelete!: Locator;
     inputSearch!: Locator;
     ddlOption!: Locator;
+    chkAgreeTerms!: Locator;
     ddlOptionItem!: (option: string) => Locator;
     linkText!: (name: string) => Locator;
 
@@ -34,21 +35,16 @@ export class CommonLocators {
     Iframe3!: FrameLocator;
     Iframe4!: FrameLocator;
 
-
     iframe1 = 'iframe[name="RadWindow1"]';
     iframe2 = 'iframe[name="RadWindow2"]';
     iframe3 = 'iframe[name="RadWindow3"]';
     iframe4 = 'iframe[name="RadWindow4"]';
-
-
-    chkAgreeTerms!: Locator;
 
     locatorInitialization(): void {
         this.Iframe1 = this.page.frameLocator(this.iframe1);
         this.Iframe2 = this.page.frameLocator(this.iframe2);
         this.Iframe3 = this.page.frameLocator(this.iframe3);
         this.Iframe4 = this.page.frameLocator(this.iframe4);
-
 
         this.btnSave = this.page.locator('button:has-text("Save")');
         this.btnCancel = this.page.locator('button:has-text("Cancel")');
@@ -220,7 +216,6 @@ export class CommonLocators {
     roleTextboxName(name: string, exact: boolean = true): Locator {
         return this.page.getByRole('textbox', { name, exact });
     }
-
 
     /**
      * Find element by option name

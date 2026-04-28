@@ -1,7 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { CommonLocators } from './common-locators';
 
-
 export class ProductLocators extends CommonLocators {
 
   constructor(page: Page) {
@@ -13,9 +12,9 @@ export class ProductLocators extends CommonLocators {
   inputQuantity!: Locator;
   divSuccessAlert!: Locator;
   btnSearch!: Locator;
+  searchInput!: Locator;
   firstProductImage!: Locator;
   btnBuyNow!: Locator;
-
 
   locatorInitialization(): void {
     super.locatorInitialization();
@@ -24,8 +23,9 @@ export class ProductLocators extends CommonLocators {
     );
     this.inputQuantity = this.page.locator('(//input[@name="quantity"])[1]');
     this.divSuccessAlert = this.page.getByRole('alert');
-    this.btnBuyNow = this.page.getByRole('button', { name: /Buy Now/i }).first();
     this.btnSearch = this.page.locator('#search button').first();
-    this.firstProductImage = this.page.locator('.product-layout').first().locator('.image a');
+    this.searchInput = this.page.locator('//input[@name="search"]');
+    this.firstProductImage = this.page.locator('//div[contains(@class, "product-layout")]//img').first();
+    this.btnBuyNow = this.page.locator('//button[text()="Buy Now"]');
   }
 }

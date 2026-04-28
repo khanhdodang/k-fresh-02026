@@ -213,7 +213,6 @@ export class Generate {
         return `${day}/${month}/${year}`; // DD/MM//YYYY
     }
 
-
     /**
     * Generate current Time
     * @returns

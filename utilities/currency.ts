@@ -1,16 +1,17 @@
 export class Currency {
   /**
-   * Format number to currency string
-   * @param amount 
-   * @returns 
-   * ex: 1234567.5 => $1,234,567.50
-   */
-  static formatCurrency(amount: number): string {
+    * Format number to currency string
+    * @param amount The number to format
+    * @param minimumFractionDigits The number of decimal places (default is 2)
+    * @returns Formatted currency string
+    * ex: 1234567.5 => $1,234,567.50
+    */
+  static formatCurrency(amount: number, minimumFractionDigits: number = 2): string {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits,
+      maximumFractionDigits: minimumFractionDigits,
     }).format(amount);
   }
 
