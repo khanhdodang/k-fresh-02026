@@ -1,12 +1,11 @@
 import test, { expect, Page } from '@playwright/test';
-import { Constants } from '../utilities/constants';
 import { CommonPage } from './common-page';
 import { step } from '../utilities/logging';
 import { CheckoutLocators } from '../locators/checkout-locators';
 import { Address } from '../models/address';
 
 export class CheckoutPage extends CheckoutLocators {
-
+  
   commonPage: CommonPage;
 
   constructor(page: Page) {
@@ -32,7 +31,7 @@ export class CheckoutPage extends CheckoutLocators {
    * Clicks the "Continue" button for the specified section.
    */
   @step('Click Continue Button')
-  async clickContinueButton(section: string): Promise<void> {
+  async clickContinueButton(): Promise<void> {
   }
 
   /**
@@ -49,7 +48,7 @@ export class CheckoutPage extends CheckoutLocators {
    * @param details The billing details to fill.
    */
   @step('Fill Billing Details')
-  async fillBillingDetails(details: Address): Promise<void> {
+  async fillBillingDetails(user: UserProfile, order: Order): Promise<void> {
   }
 
   /**

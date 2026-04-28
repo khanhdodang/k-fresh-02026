@@ -32,7 +32,7 @@ export class RegisterPage extends RegisterLocators {
    */
   @step('Submit Registration Form')
   async submitRegistrationForm(): Promise<void> {
-    await this.btnContinue.click();
+    await this.commonPage.click(this.btnContinue);
   }
 
   /**
@@ -40,6 +40,7 @@ export class RegisterPage extends RegisterLocators {
    */
   @step('Click Agree to Terms Checkbox')
   async clickAgreeTermsCheckbox(): Promise<void> {
-    await this.chkPrivacyPolicy.check();
+    await this.commonPage.click(this.chkPrivacyPolicy);
   }
 }
+

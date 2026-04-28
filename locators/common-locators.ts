@@ -1,5 +1,8 @@
 import { FrameLocator, Locator, Page } from '@playwright/test';
 export class CommonLocators {
+    locatorsInitialization() {
+      this.locatorInitialization();
+    }
     page: Page;
 
     constructor(page: Page) {

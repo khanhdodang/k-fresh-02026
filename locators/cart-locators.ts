@@ -2,7 +2,6 @@ import { Locator, Page } from '@playwright/test';
 import { CommonLocators } from './common-locators';
 
 export class CartLocators extends CommonLocators {
-
   constructor(page: Page) {
     super(page);
     this.locatorInitialization();
@@ -14,8 +13,10 @@ export class CartLocators extends CommonLocators {
   pMainCartMessage!: Locator;
   divCartModifiedSuccessMessage!: Locator;
   btnRemoveItems!: Locator;
+  miniCartDrawer!: Locator;
+  btnViewCart!: Locator;
+  lnkCheckout!: Locator;
   rowProduct!: (productName: string) => Locator;
-  btnRemove!: (productName: string) => Locator;
   btnUpdate!: (productName: string) => Locator;
   inputQuantity!: (productName: string) => Locator;
   cellTotal!: (productName: string) => Locator;
@@ -36,10 +37,21 @@ export class CartLocators extends CommonLocators {
       .locator('//div[@class="alert alert-success alert-dismissible"]')
       .first();
     this.btnRemoveItems = this.page.locator('button[title="Remove"]');
+    /** MINI CART DRAWER **/
+    this.miniCartDrawer = this.page.locator("//div[@data-position='right' and contains(@class,'mz-pure-drawer')][.//h5[contains(.,'Cart')]]");
+    /** DROPDOWN CART **/
+    this.btnViewCart = this.page.getByRole("link", { name: 'View Cart' });
+
+    /** CHECKOUT LINK */
+    this.lnkCheckout = this.page.getByRole('link', {
+      name: 'Checkout',
+      exact: true,
+    });
+
     this.rowProduct = (productName: string) => this.page.locator(`(//td/a[text()='${productName}']/../..)[1]`);
-    this.btnRemove = (productName: string) => this.page.locator(`(//td/a[text()='${productName}']/../..//button[@title="Remove"])[1]`);
-    this.btnUpdate = (productName: string) => this.page.locator(`(//td/a[text()='${productName}']/../..//button[@title="Update"])[1]`);
-    this.inputQuantity = (productName: string) => this.page.locator(`(//td/a[text()='${productName}']/../..//input[starts-with(@name,'quantity')])[1]`);
+    this.btnUpdate = (productName: string) => this.page.locator(`//td/a[text()='${productName}']/../..//button[@title="Update"]`);
+    this.inputQuantity = (productName: string) => this.page.locator(`//td/a[text()='${productName}']/../..//input[starts-with(@name,'quantity')]`);
     this.cellTotal = (productName: string) => this.page.locator(`(//td/a[text()='${productName}']/../..//td)[last()]`);
   }
 }
+

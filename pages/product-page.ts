@@ -48,7 +48,15 @@ export class ProductPage extends ProductLocators {
   async clickViewCartLink(): Promise<void> {
     await this.commonPage.roleLinkName('View Cart', false).click();
   }
-
+  
+  /**
+     * Sets the quantity of the product to be added to the cart.
+     * @param qty 
+     */
+  @step('Set product quantity')
+  async setQuantity(qty: number): Promise<void> {
+    await this.inputQuantity.fill(qty.toString());
+    
   @step('Search and Navigate to Product Page via UI Navigation')
   async searchAndSelectProduct(product: Product): Promise<void> {
     await this.commonPage.fill(this.searchInput.first(), product.name);

@@ -1,5 +1,6 @@
-export class Constants {
+import process from 'process';
 
+export class Constants {
   // Section timeouts
   static readonly TIMEOUTS = {
     DEFAULT: 60000,

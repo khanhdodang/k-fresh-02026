@@ -17,7 +17,7 @@ export class CartPage extends CartLocators {
     this.commonPage = new CommonPage(page);
     this.assertHelper = new AssertHelper();
   }
-
+  
   /**
    * Clicks the "Cart" button to navigate to the cart page.
    */
@@ -31,7 +31,14 @@ export class CartPage extends CartLocators {
    */
   @step('Click Checkout Button')
   async clickCheckoutButton(): Promise<void> {
+    await this.commonPage.click(this.commonPage.roleButtonName('Checkout', true));
+  }
+
+  @step('Update Quantity')
+  async updateQuantity(quantity: number, productName: string): Promise<void> {
+    await this.inputQuantity(productName).fill(quantity.toString());
     await this.commonPage.click(this.commonPage.roleButtonName('Checkout'));
+
   }
 
   /**
@@ -68,11 +75,18 @@ export class CartPage extends CartLocators {
   async verifyProductAddedToCart(product: Product): Promise<void> {
     await this.assertHelper.assertElementVisible(this.rowProduct(product.name));
     await this.assertHelper.assertElementHasValue(this.inputQuantity(product.name), product.quantity.toString());
-
     const totalText = await this.commonPage.innerText(this.cellTotal(product.name));
     const actualTotal = Currency.parseCurrency(totalText);
     const expectedTotal = product.price * product.quantity;
     Assertions.assertEqual(actualTotal, expectedTotal, `Expected total for ${product.name} to be ${expectedTotal}`);
+  }
+
+  /**
+   * Clicks the view cart link in the success alert to navigate to the cart page
+   */
+  @step('Clicking the view cart link in the success alert to navigate to the cart page')
+  async clickViewCartLink(): Promise<void> {
+    await this.commonPage.click(this.roleLinkName('View Cart', false));
   }
 
   /**
@@ -83,7 +97,7 @@ export class CartPage extends CartLocators {
   async clickRemoveProduct(product: Product): Promise<void> {
     await this.commonPage.click(this.btnRemove(product.name));
   }
-
+  
   /**
    * Removes all products from the cart if any exist
    */
@@ -101,6 +115,15 @@ export class CartPage extends CartLocators {
    * Verifies that a specific product has been removed from the cart by checking that it no longer appears in the cart table
    * @param product
    */
+  @step('Click Update Quantity Button')
+  async clickUpdateQuantity(productName: string): Promise<void> {
+    await this.commonPage.click(this.btnUpdate(productName));
+  }
+
+  /**
+  * Verifies that a specific product has been removed from the cart by checking that it no longer appears in the cart table
+  * @param product
+  */
   @step('Verifying that a specific product has been removed from the cart by checking that it no longer appears in the cart table')
   async verifyProductRemovedFromCart(product: Product): Promise<void> {
     await this.assertHelper.assertElementNotVisible(this.rowProduct(product.name));
@@ -136,8 +159,6 @@ export class CartPage extends CartLocators {
     const actualTotal = Currency.parseCurrency(totalText);
     const expectedTotal = product.price * product.quantity;
     Assertions.assertEqual(actualTotal, expectedTotal, `Expected updated total for ${product.name} to be ${expectedTotal}`);
-
     await this.assertHelper.assertElementHasValue(this.inputQuantity(product.name), product.quantity.toString());
   }
-
 }
