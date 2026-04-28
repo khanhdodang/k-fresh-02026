@@ -1,0 +1,22 @@
+{
+  "qa": {
+    "name": "HP LP3065",
+    "quantity": 2,
+    "price": 122
+  },
+  "staging": {
+    "name": "HP LP3065",
+    "quantity": 2,
+    "price": 122
+  },
+  "uat": {
+    "name": "HP LP3065",
+    "quantity": 2,
+    "price": 122
+  },
+  "production": {
+    "name": "HP LP3065",
+    "quantity": 2,
+    "price": 122
+  }
+}

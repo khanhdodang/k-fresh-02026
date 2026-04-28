@@ -5,7 +5,6 @@ import { step } from '../utilities/logging';
 import { CheckoutLocators } from '../locators/checkout-locators';
 import { Address } from '../models/address';
 
-
 export class CheckoutPage extends CheckoutLocators {
 
   commonPage: CommonPage;

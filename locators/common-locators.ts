@@ -25,8 +25,26 @@ export class CommonLocators {
     btnConfirmDelete!: Locator;
     btnCancelDelete!: Locator;
     inputSearch!: Locator;
+    ddlOption!: Locator;
+    ddlOptionItem!: (option: string) => Locator;
+    linkText!: (name: string) => Locator;
+
+    Iframe1!: FrameLocator;
+    Iframe2!: FrameLocator;
+    Iframe3!: FrameLocator;
+    Iframe4!: FrameLocator;
+
+    iframe1 = 'iframe[name="RadWindow1"]';
+    iframe2 = 'iframe[name="RadWindow2"]';
+    iframe3 = 'iframe[name="RadWindow3"]';
+    iframe4 = 'iframe[name="RadWindow4"]';
 
     locatorInitialization(): void {
+        this.Iframe1 = this.page.frameLocator(this.iframe1);
+        this.Iframe2 = this.page.frameLocator(this.iframe2);
+        this.Iframe3 = this.page.frameLocator(this.iframe3);
+        this.Iframe4 = this.page.frameLocator(this.iframe4);
+
         this.btnSave = this.page.locator('button:has-text("Save")');
         this.btnCancel = this.page.locator('button:has-text("Cancel")');
         this.btnEdit = this.page.locator('button:has-text("Edit")');
@@ -36,6 +54,17 @@ export class CommonLocators {
         this.btnConfirmDelete = this.page.locator('button:has-text("Confirm Delete")');
         this.btnCancelDelete = this.page.locator('button:has-text("Cancel Delete")');
         this.inputSearch = this.page.locator('input[placeholder="Search"]');
+
+        this.ddlOption = this.page.locator('ul[role="listbox"]');
+
+        this.linkText = (name: string): Locator => {
+            return this.page.locator(`xpath=//a[@id and text()="${name}"]`);
+        };
+
+        this.ddlOptionItem = (optionName: string): Locator => {
+            return this.page.locator(`xpath=//ul/li[text()="${optionName}"]`);
+        };
+
     }
 
     /**
@@ -184,7 +213,6 @@ export class CommonLocators {
     roleTextboxName(name: string, exact: boolean = true): Locator {
         return this.page.getByRole('textbox', { name, exact });
     }
-
 
     /**
      * Find element by option name
