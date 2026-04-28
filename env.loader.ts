@@ -1,7 +1,7 @@
 process.env.DOTENV_CONFIG_QUIET = 'true';
 import dotenv from 'dotenv';
-import path from 'node:path';
-import fs from 'node:fs';
+import path from 'path';
+import fs from 'fs';
 
 const ENV = process.env.ENV?.toLowerCase() ?? 'uat';
 const sharedEnvPath = path.resolve(__dirname, 'profiles', `.env.${ENV}`);

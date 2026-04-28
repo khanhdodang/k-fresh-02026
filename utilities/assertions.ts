@@ -39,6 +39,17 @@ export class Assertions {
     }
 
     /**
+    * Asserts that a number is greater than or equal to a minimum value.
+    * @param {number} actual - The actual value.
+    * @param {number} min - The minimum expected value.
+    * @param {string} [message] - Optional custom message.
+    */
+    @step('Asserts that a number is greater than or equal to minimum.')
+    assertNumberGreaterThanOrEqual(actual: number, min: number, message?: string): void {
+        expect.soft(actual, message ?? `Expected ${actual} to be >= ${min}`).toBeGreaterThanOrEqual(min);
+    }
+
+    /**
      * Soft assertion to check if two values are not equal.
      * @param actual - The actual value to check
      * @param expected - The expected value

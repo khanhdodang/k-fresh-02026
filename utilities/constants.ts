@@ -37,4 +37,16 @@ export class Constants {
   static readonly LOGIN_PASSWORD = process.env.LOGIN_PASSWORD || '';
   static readonly USERS_JSON_FILE = './data/users.json';
   static readonly PRODUCT_JSON_FILE = './data/product.json';
+  static readonly LOAD_STATE = {
+    NETWORK_IDLE: "networkidle",
+    DOM_CONTENT_LOADED: "domcontentloaded",
+    LOAD: "load",
+  } as const;
+  static readonly REGEX = {
+    PRICE_FORMAT: /\d+\.\d{2}/i, //Example: $100.00
+    COMPARE_SUCCESS: /success|added to your product comparison/i,
+    STOCK_STATUS: /in stock|out of stock|availability|available|unavailable/i,
+    IMAGE_URL: /.+\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i,
+    NON_EMPTY_TEXT: /\w+/, //Example: Any Text Content
+  } as const;
 }
