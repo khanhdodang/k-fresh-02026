@@ -4,9 +4,11 @@ export interface User {
 }
 
 export interface UserProfile {
-  email: string;
   firstName: string;
   lastName: string;
+  email: string;
+  telephone: string;
+
   password: string;
-  phone: string;
+  confirmPassword?: string;
 }

@@ -773,4 +773,13 @@ export class CommonPage extends CommonLocators {
             return null;
         }
     }
+
+    /**
+     * Get Current URL
+     * @returns
+     */
+    @step('Get Current URL')
+    getCurrentUrl(): string {
+        return this.page.url();
+    }
 }
