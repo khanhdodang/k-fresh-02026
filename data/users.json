@@ -7,6 +7,10 @@
         "username": "prod_user",
         "password": "ProdSecretPassword!"
     },
+    "uat": {
+        "username": "tomsmith",
+        "password": "SuperSecretPassword!"
+    },
     "staging": {
         "username": "staging_user",
         "password": "StagingSecretPassword!"
